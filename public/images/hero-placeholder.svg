@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="15%" r="95%">
+      <stop offset="0%" stop-color="#1c2547"/>
+      <stop offset="100%" stop-color="#05070f"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="1000" fill="url(#g)"/>
+  <g fill="#d4af7a" opacity="0.7">
+    <circle cx="266" cy="200" r="2.5"/>
+    <circle cx="533" cy="125" r="2"/>
+    <circle cx="1066" cy="166" r="2.5"/>
+    <circle cx="1333" cy="250" r="2"/>
+    <circle cx="800" cy="100" r="1.5"/>
+    <circle cx="200" cy="750" r="2"/>
+    <circle cx="1400" cy="800" r="2.5"/>
+  </g>
+  <text x="50%" y="52%" font-family="Georgia, serif" font-size="26" letter-spacing="4" fill="#f3e0b3" text-anchor="middle" dominant-baseline="middle" opacity="0.5">HERO PHOTO PLACEHOLDER</text>
+</svg>

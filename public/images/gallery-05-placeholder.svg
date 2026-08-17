@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="20%" r="90%">
+      <stop offset="0%" stop-color="#1c2547"/>
+      <stop offset="100%" stop-color="#05070f"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="800" fill="url(#g)"/>
+  <g fill="#d4af7a" opacity="0.7">
+    <circle cx="133" cy="160" r="2"/>
+    <circle cx="266" cy="100" r="1.5"/>
+    <circle cx="533" cy="133" r="2"/>
+    <circle cx="666" cy="200" r="1.5"/>
+    <circle cx="400" cy="80" r="1"/>
+    <circle cx="100" cy="600" r="1.5"/>
+    <circle cx="700" cy="640" r="2"/>
+  </g>
+  <text x="50%" y="50%" font-family="Georgia, serif" font-size="57" fill="#f3e0b3" text-anchor="middle" dominant-baseline="middle" opacity="0.9">Gallery 05</text>
+</svg>
