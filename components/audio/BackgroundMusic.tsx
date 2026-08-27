@@ -7,6 +7,7 @@ import {
   toggleBackgroundMusic,
   useMusicPlaying,
 } from "@/lib/audio-state";
+import { withBasePath } from "@/lib/utils";
 
 /**
  * Lives inside #invitation-content (see WeddingInvitation.tsx), so it
@@ -29,7 +30,7 @@ export function BackgroundMusic() {
 
   return (
     <>
-      <audio ref={audioRef} src="/audio/night-theme.mp3" loop preload="none" />
+      <audio ref={audioRef} src={withBasePath("/audio/night-theme.mp3")} loop preload="none" />
       <button
         type="button"
         onClick={toggleBackgroundMusic}
