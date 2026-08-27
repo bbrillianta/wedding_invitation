@@ -1,4 +1,5 @@
 import type { SiteContent } from "@/types";
+import { withBasePath } from "@/lib/utils";
 
 /**
  * Single source of truth for placeholder wedding content.
@@ -19,7 +20,7 @@ export const siteContent: SiteContent = {
     buttonLabel: "Open Invitation",
   },
   hero: {
-    heroImage: "/images/hero-placeholder.svg",
+    heroImage: withBasePath("/images/hero-placeholder.svg"),
     subheading: "Together with our families, we invite you to celebrate our wedding",
   },
   events: {
@@ -46,30 +47,30 @@ export const siteContent: SiteContent = {
       title: "Under the Same Sky",
       description:
         "A chance meeting at a mutual friend's rooftop stargazing party — we talked until sunrise and never really stopped.",
-      image: "/images/story-01-placeholder.svg",
+      image: withBasePath("/images/story-01-placeholder.svg"),
     },
     {
       dateLabel: "March 2023",
       title: "The Question",
       description:
         "On a quiet hilltop far from city lights, surrounded by more stars than we'd ever seen, Bintang and Mega promised each other forever.",
-      image: "/images/story-02-placeholder.svg",
+      image: withBasePath("/images/story-02-placeholder.svg"),
     },
     {
       dateLabel: "November 2026",
       title: "Happily Ever After",
       description:
         "We're gathering the people we love most to celebrate the beginning of our next chapter together.",
-      image: "/images/story-03-placeholder.svg",
+      image: withBasePath("/images/story-03-placeholder.svg"),
     },
   ],
   gallery: [
-    { src: "/images/gallery-01-placeholder.svg", alt: "Bintang and Mega placeholder photo 1" },
-    { src: "/images/gallery-02-placeholder.svg", alt: "Bintang and Mega placeholder photo 2" },
-    { src: "/images/gallery-03-placeholder.svg", alt: "Bintang and Mega placeholder photo 3" },
-    { src: "/images/gallery-04-placeholder.svg", alt: "Bintang and Mega placeholder photo 4" },
-    { src: "/images/gallery-05-placeholder.svg", alt: "Bintang and Mega placeholder photo 5" },
-    { src: "/images/gallery-06-placeholder.svg", alt: "Bintang and Mega placeholder photo 6" },
+    { src: withBasePath("/images/gallery-01-placeholder.svg"), alt: "Bintang and Mega placeholder photo 1" },
+    { src: withBasePath("/images/gallery-02-placeholder.svg"), alt: "Bintang and Mega placeholder photo 2" },
+    { src: withBasePath("/images/gallery-03-placeholder.svg"), alt: "Bintang and Mega placeholder photo 3" },
+    { src: withBasePath("/images/gallery-04-placeholder.svg"), alt: "Bintang and Mega placeholder photo 4" },
+    { src: withBasePath("/images/gallery-05-placeholder.svg"), alt: "Bintang and Mega placeholder photo 5" },
+    { src: withBasePath("/images/gallery-06-placeholder.svg"), alt: "Bintang and Mega placeholder photo 6" },
   ],
   gift: {
     note:
