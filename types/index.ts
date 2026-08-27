@@ -40,6 +40,11 @@ export type SiteContent = {
     tagline: string;
   };
   weddingDateISO: string;
+  intro: {
+    eyebrow: string;
+    subheading: string;
+    buttonLabel: string;
+  };
   hero: {
     heroImage: string;
     subheading: string;

@@ -2,6 +2,7 @@ import Image from "next/image";
 import { siteContent } from "@/lib/content";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Reveal } from "@/components/ui/Reveal";
 
 export function LoveStoryTimeline() {
   const { loveStory } = siteContent;
@@ -12,9 +13,17 @@ export function LoveStoryTimeline() {
 
         <ol className="mt-14 space-y-14">
           {loveStory.map((milestone, i) => (
-            <li
+            // `as="li"` keeps the animated element inside the <ol> a real
+            // list item, and its position among its siblings unchanged —
+            // the `even:` row-reversal below still alternates correctly.
+            // Each milestone drifts in from the side its photo sits on.
+            <Reveal
+              as="li"
               key={milestone.title}
               className="flex flex-col items-center gap-6 sm:flex-row sm:even:flex-row-reverse"
+              x={i % 2 === 0 ? -28 : 28}
+              y={16}
+              duration={0.8}
             >
               <div className="relative h-40 w-40 shrink-0 overflow-hidden rounded-full border-2 border-gold-400/40">
                 <Image
@@ -36,7 +45,7 @@ export function LoveStoryTimeline() {
                   {milestone.description}
                 </p>
               </div>
-            </li>
+            </Reveal>
           ))}
         </ol>
       </Container>

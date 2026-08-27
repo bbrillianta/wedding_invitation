@@ -3,6 +3,7 @@ import { siteContent } from "@/lib/content";
 import { formatDate, formatTime } from "@/lib/utils";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Reveal } from "@/components/ui/Reveal";
 import type { EventDetail } from "@/types";
 
 function EventCard({ event }: { event: EventDetail }) {
@@ -59,8 +60,14 @@ export function EventDetails() {
       <Container>
         <SectionHeading eyebrow="Save the date" title="Event Details" />
         <div className="mt-12 grid gap-6 sm:grid-cols-2">
-          <EventCard event={events.ceremony} />
-          <EventCard event={events.reception} />
+          {/* Akad lands first, Resepsi a beat later — same order they
+              happen in, and it keeps the pair from popping as one block. */}
+          <Reveal delay={0.1}>
+            <EventCard event={events.ceremony} />
+          </Reveal>
+          <Reveal delay={0.25}>
+            <EventCard event={events.reception} />
+          </Reveal>
         </div>
       </Container>
     </section>

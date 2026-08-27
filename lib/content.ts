@@ -7,34 +7,37 @@ import type { SiteContent } from "@/types";
  */
 export const siteContent: SiteContent = {
   couple: {
-    brideName: "Amara",
-    groomName: "Kavi",
-    monogram: "A & K",
+    brideName: "Bintang",
+    groomName: "Mega",
+    monogram: "B & M",
     tagline: "Two stars, one constellation",
   },
-  weddingDateISO: "2027-06-19T09:00:00+07:00",
+  weddingDateISO: "2026-11-28T09:00:00+07:00",
+  intro: {
+    eyebrow: "You're Invited",
+    subheading: "to the wedding of",
+    buttonLabel: "Open Invitation",
+  },
   hero: {
     heroImage: "/images/hero-placeholder.svg",
     subheading: "Together with our families, we invite you to celebrate our wedding",
   },
   events: {
     ceremony: {
-      name: "Holy Matrimony",
-      dateTimeISO: "2027-06-19T09:00:00+07:00",
-      venueName: "St. Aurora Chapel",
-      address: "Jl. Bintang Selatan No. 12, Jakarta",
-      mapEmbedUrl:
-        "https://www.google.com/maps?q=Jakarta&output=embed",
-      mapLink: "https://maps.google.com/?q=Jakarta",
+      name: "Akad",
+      dateTimeISO: "2026-11-26T08:00:00+07:00",
+      venueName: "Masjid Namira",
+      address: "Gresik, Jawa Timur",
+      mapEmbedUrl: "https://www.google.com/maps?q=-7.1526463,112.4084817&output=embed",
+      mapLink: "https://maps.app.goo.gl/NHtFBQSd9stBLU7Q7",
     },
     reception: {
-      name: "Wedding Reception",
-      dateTimeISO: "2027-06-19T12:00:00+07:00",
-      venueName: "The Celestial Ballroom",
-      address: "Jl. Galaksi Raya No. 8, Jakarta",
-      mapEmbedUrl:
-        "https://www.google.com/maps?q=Jakarta&output=embed",
-      mapLink: "https://maps.google.com/?q=Jakarta",
+      name: "Resepsi",
+      dateTimeISO: "2026-11-28T11:00:00+07:00",
+      venueName: "Gedung Wanita Candra Kencana",
+      address: "Sidoarjo, Jawa Timur",
+      mapEmbedUrl: "https://www.google.com/maps?q=-7.2878229,112.7618051&output=embed",
+      mapLink: "https://maps.app.goo.gl/efn4TMUNne1WmWZC9",
     },
   },
   loveStory: [
@@ -49,11 +52,11 @@ export const siteContent: SiteContent = {
       dateLabel: "March 2023",
       title: "The Question",
       description:
-        "On a quiet hilltop far from city lights, surrounded by more stars than we'd ever seen, Kavi asked Amara to be his forever.",
+        "On a quiet hilltop far from city lights, surrounded by more stars than we'd ever seen, Bintang and Mega promised each other forever.",
       image: "/images/story-02-placeholder.svg",
     },
     {
-      dateLabel: "June 2027",
+      dateLabel: "November 2026",
       title: "Happily Ever After",
       description:
         "We're gathering the people we love most to celebrate the beginning of our next chapter together.",
@@ -61,37 +64,37 @@ export const siteContent: SiteContent = {
     },
   ],
   gallery: [
-    { src: "/images/gallery-01-placeholder.svg", alt: "Amara and Kavi placeholder photo 1" },
-    { src: "/images/gallery-02-placeholder.svg", alt: "Amara and Kavi placeholder photo 2" },
-    { src: "/images/gallery-03-placeholder.svg", alt: "Amara and Kavi placeholder photo 3" },
-    { src: "/images/gallery-04-placeholder.svg", alt: "Amara and Kavi placeholder photo 4" },
-    { src: "/images/gallery-05-placeholder.svg", alt: "Amara and Kavi placeholder photo 5" },
-    { src: "/images/gallery-06-placeholder.svg", alt: "Amara and Kavi placeholder photo 6" },
+    { src: "/images/gallery-01-placeholder.svg", alt: "Bintang and Mega placeholder photo 1" },
+    { src: "/images/gallery-02-placeholder.svg", alt: "Bintang and Mega placeholder photo 2" },
+    { src: "/images/gallery-03-placeholder.svg", alt: "Bintang and Mega placeholder photo 3" },
+    { src: "/images/gallery-04-placeholder.svg", alt: "Bintang and Mega placeholder photo 4" },
+    { src: "/images/gallery-05-placeholder.svg", alt: "Bintang and Mega placeholder photo 5" },
+    { src: "/images/gallery-06-placeholder.svg", alt: "Bintang and Mega placeholder photo 6" },
   ],
   gift: {
     note:
       "Your presence is the greatest gift of all. For those who wish to send a token of love from afar, we've included our details below.",
     bankTransfers: [
-      { bankName: "Bank Central Asia (BCA)", accountName: "Amara Putri", accountNumber: "1234567890" },
-      { bankName: "Bank Mandiri", accountName: "Kavi Wirawan", accountNumber: "0987654321" },
+      { bankName: "Bank Central Asia (BCA)", accountName: "Bintang Putri", accountNumber: "1234567890" },
+      { bankName: "Bank Mandiri", accountName: "Mega Wirawan", accountNumber: "0987654321" },
     ],
     eWallets: [
-      { provider: "GoPay", name: "Amara Putri", number: "0812-3456-7890" },
-      { provider: "OVO", name: "Kavi Wirawan", number: "0898-7654-3210" },
+      { provider: "GoPay", name: "Bintang Putri", number: "0812-3456-7890" },
+      { provider: "OVO", name: "Mega Wirawan", number: "0898-7654-3210" },
     ],
   },
   rsvp: {
-    deadlineISO: "2027-05-19T00:00:00+07:00",
+    deadlineISO: "2026-11-14T00:00:00+07:00",
     whatsappNumber: "6281234567890",
     whatsappDisplay: "+62 812-3456-7890",
-    contactName: "Amara & Kavi",
+    contactName: "Bintang & Mega",
     contactPhone: "+62 812-3456-7890",
-    contactEmail: "hello@amara-kavi.wedding",
+    contactEmail: "hello@bintang-mega.wedding",
   },
   seo: {
-    title: "Amara & Kavi's Wedding",
+    title: "Bintang & Mega's Wedding",
     description:
-      "Join us as we celebrate the wedding of Amara and Kavi — under the stars, with the people we love most.",
-    ogImageAlt: "Amara & Kavi Wedding Invitation",
+      "Join us as we celebrate the wedding of Bintang and Mega — under the stars, with the people we love most.",
+    ogImageAlt: "Bintang & Mega Wedding Invitation",
   },
 };

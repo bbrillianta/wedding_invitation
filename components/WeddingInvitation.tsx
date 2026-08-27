@@ -6,6 +6,8 @@ import { GiftInfo } from "@/components/sections/GiftInfo";
 import { RSVPSection } from "@/components/sections/RSVPSection";
 import { ConstellationDivider } from "@/components/layout/ConstellationDivider";
 import { SiteFooter } from "@/components/layout/SiteFooter";
+import { CloudIntro } from "@/components/intro/CloudIntro";
+import { BackgroundMusic } from "@/components/audio/BackgroundMusic";
 import type { Guest } from "@/types";
 
 /**
@@ -15,19 +17,23 @@ import type { Guest } from "@/types";
  */
 export function WeddingInvitation({ guest }: { guest?: Guest | null }) {
   return (
-    <main>
-      <Hero guest={guest} />
-      <ConstellationDivider />
-      <EventDetails />
-      <ConstellationDivider />
-      <LoveStoryTimeline />
-      <ConstellationDivider />
-      <Gallery />
-      <ConstellationDivider />
-      <GiftInfo />
-      <ConstellationDivider />
-      <RSVPSection guest={guest} />
-      <SiteFooter />
-    </main>
+    <>
+      <CloudIntro guest={guest} />
+      <main id="invitation-content">
+        <Hero guest={guest} />
+        <ConstellationDivider />
+        <EventDetails />
+        <ConstellationDivider />
+        <LoveStoryTimeline />
+        <ConstellationDivider />
+        <Gallery />
+        <ConstellationDivider />
+        <GiftInfo />
+        <ConstellationDivider />
+        <RSVPSection guest={guest} />
+        <SiteFooter />
+        <BackgroundMusic />
+      </main>
+    </>
   );
 }

@@ -1,29 +1,46 @@
 @import "tailwindcss";
 
 :root {
+  /* Midnight sky, top (darkest) to a touch of navy-indigo depth lower down */
   --color-midnight-950: #05070f;
   --color-midnight-900: #0b1023;
   --color-midnight-800: #131a35;
-  --color-midnight-700: #1c2547;
-  --color-indigo-700: #1f2a5c;
+
+  /* Dusk intro sky, zenith to horizon. The top stop is deliberately
+     --color-midnight-800: the intro's darkest sky and the invitation's
+     lightest one are the same colour, so the fly-through crossfades
+     between two skies that already share a seam. */
+  --color-sky-dusk-900: #131a35;
+  --color-sky-dusk-700: #2b3157;
+  --color-sky-dusk-500: #4d456c;
+  --color-sky-dusk-300: #8d6774;
+  --color-sky-dusk-100: #cf9375;
+
+  /* The last of the sun, sitting below the horizon and lighting the
+     clouds from underneath */
+  --color-dusk-glow: #f7c894;
+
+  /* Accents & text */
   --color-gold-400: #d4af7a;
   --color-gold-300: #f3e0b3;
   --color-starlight: #f5f0e6;
   --color-starlight-dim: #c9c3d6;
-  --color-rose-muted: #c99b9b;
 }
 
 @theme inline {
   --color-midnight-950: var(--color-midnight-950);
   --color-midnight-900: var(--color-midnight-900);
   --color-midnight-800: var(--color-midnight-800);
-  --color-midnight-700: var(--color-midnight-700);
-  --color-indigo-700: var(--color-indigo-700);
+  --color-sky-dusk-900: var(--color-sky-dusk-900);
+  --color-sky-dusk-700: var(--color-sky-dusk-700);
+  --color-sky-dusk-500: var(--color-sky-dusk-500);
+  --color-sky-dusk-300: var(--color-sky-dusk-300);
+  --color-sky-dusk-100: var(--color-sky-dusk-100);
+  --color-dusk-glow: var(--color-dusk-glow);
   --color-gold-400: var(--color-gold-400);
   --color-gold-300: var(--color-gold-300);
   --color-starlight: var(--color-starlight);
   --color-starlight-dim: var(--color-starlight-dim);
-  --color-rose-muted: var(--color-rose-muted);
 
   --font-serif-display: var(--font-cormorant), serif;
   --font-script: var(--font-parisienne), cursive;
@@ -46,14 +63,26 @@ body {
   outline-offset: 3px;
 }
 
-/* Starfield background */
+/* Night sky background: subtle depth gradient + full-height stars */
 .starfield {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  background-color: var(--color-midnight-950);
+  background: linear-gradient(
+    to bottom,
+    var(--color-midnight-950) 0%,
+    var(--color-midnight-900) 55%,
+    var(--color-midnight-800) 100%
+  );
+}
+
+/* Star layer: tiled dots across the full sky */
+.starfield::before {
+  content: "";
+  position: absolute;
+  inset: 0;
   background-image:
     radial-gradient(1.5px 1.5px at 20% 30%, var(--color-starlight) 100%, transparent),
     radial-gradient(1px 1px at 65% 15%, var(--color-starlight) 100%, transparent),
@@ -68,23 +97,78 @@ body {
   animation: drift 120s linear infinite;
 }
 
-.starfield::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse at 50% 0%,
-    rgba(212, 175, 122, 0.08),
-    transparent 60%
-  );
-}
-
 .starfield-twinkle {
   position: absolute;
   border-radius: 9999px;
   background: var(--color-gold-300);
   box-shadow: 0 0 6px 1px rgba(243, 224, 179, 0.8);
   animation: twinkle 4s ease-in-out infinite;
+}
+
+/* Dusk sky for the intro screen: night already gathering overhead,
+   the last warm light still on the horizon. */
+.dusk-sky {
+  background: linear-gradient(
+    to bottom,
+    var(--color-sky-dusk-900) 0%,
+    var(--color-sky-dusk-700) 26%,
+    var(--color-sky-dusk-500) 52%,
+    var(--color-sky-dusk-300) 78%,
+    var(--color-sky-dusk-100) 100%
+  );
+}
+
+/* The light source the clouds are lit by — a low, wide bloom sitting
+   just under the horizon rather than a visible sun disc. */
+.dusk-glow {
+  background: radial-gradient(
+    ellipse 80% 100% at 50% 118%,
+    color-mix(in srgb, var(--color-dusk-glow) 72%, transparent) 0%,
+    color-mix(in srgb, var(--color-dusk-glow) 34%, transparent) 38%,
+    transparent 72%
+  );
+  pointer-events: none;
+}
+
+/* First stars, only in the darkest band overhead. Same tile as the
+   night starfield so the intro sky and the invitation sky are visibly
+   the same sky at two different hours. */
+.dusk-stars {
+  background-image:
+    radial-gradient(1.5px 1.5px at 20% 30%, var(--color-starlight) 100%, transparent),
+    radial-gradient(1px 1px at 65% 15%, var(--color-starlight) 100%, transparent),
+    radial-gradient(1px 1px at 40% 80%, var(--color-gold-300) 100%, transparent),
+    radial-gradient(1px 1px at 88% 62%, var(--color-starlight) 100%, transparent),
+    radial-gradient(1px 1px at 30% 10%, var(--color-starlight) 100%, transparent);
+  background-repeat: repeat;
+  background-size: 220px 220px;
+  opacity: 0.55;
+  mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.45) 30%, transparent 52%);
+  pointer-events: none;
+}
+
+/* Cloud sizes are a percentage of viewport *width*, so on a tall narrow
+   phone the same percentage covers far less of the screen than it does
+   on a desktop. Scale them up below the breakpoint to keep the field
+   looking equally dense. */
+.cloud-field {
+  --cloud-scale: 1;
+}
+
+@media (max-width: 700px) {
+  .cloud-field {
+    --cloud-scale: 2;
+  }
+}
+
+/* Gentle idle sway for the intro clouds. Kept on its own element so
+   this transform never collides with the motion-driven translateZ that
+   powers the fly-through. Duration/delay are set per cloud inline. */
+.cloud-drift {
+  animation-name: cloud-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }
 
 @keyframes drift {
@@ -108,12 +192,24 @@ body {
   }
 }
 
+@keyframes cloud-drift {
+  from {
+    transform: translateX(-1%);
+  }
+  to {
+    transform: translateX(1%);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .starfield {
+  .starfield::before {
     animation: none;
   }
   .starfield-twinkle {
     animation: none;
     opacity: 0.6;
+  }
+  .cloud-drift {
+    animation: none;
   }
 }

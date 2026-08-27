@@ -1,19 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800">
   <defs>
-    <radialGradient id="g" cx="50%" cy="20%" r="90%">
-      <stop offset="0%" stop-color="#1c2547"/>
-      <stop offset="100%" stop-color="#05070f"/>
-    </radialGradient>
+    <linearGradient id="g" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#05070f"/>
+      <stop offset="55%" stop-color="#0b1023"/>
+      <stop offset="100%" stop-color="#131a35"/>
+    </linearGradient>
   </defs>
   <rect width="800" height="800" fill="url(#g)"/>
-  <g fill="#d4af7a" opacity="0.7">
-    <circle cx="133" cy="160" r="2"/>
-    <circle cx="266" cy="100" r="1.5"/>
-    <circle cx="533" cy="133" r="2"/>
-    <circle cx="666" cy="200" r="1.5"/>
-    <circle cx="400" cy="80" r="1"/>
-    <circle cx="100" cy="600" r="1.5"/>
-    <circle cx="700" cy="640" r="2"/>
+  <g fill="#f3e0b3" opacity="0.6">
+    <circle cx="133" cy="100" r="2"/>
+    <circle cx="266" cy="66" r="1.5"/>
+    <circle cx="533" cy="80" r="2"/>
+    <circle cx="666" cy="133" r="1.5"/>
+    <circle cx="400" cy="50" r="1"/>
   </g>
-  <text x="50%" y="50%" font-family="Georgia, serif" font-size="57" fill="#f3e0b3" text-anchor="middle" dominant-baseline="middle" opacity="0.9">Gallery 02</text>
+  <text x="50%" y="52%" font-family="Georgia, serif" font-size="26" letter-spacing="4" fill="#f5f0e6" text-anchor="middle" dominant-baseline="middle" opacity="0.45">GALLERY 02</text>
 </svg>

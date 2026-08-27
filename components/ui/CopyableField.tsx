@@ -23,7 +23,7 @@ export function CopyableField({
   }
 
   return (
-    <div className="flex items-center justify-between gap-3 rounded-lg border border-gold-400/15 bg-midnight-950/40 px-4 py-3">
+    <div className="flex items-center justify-between gap-3 rounded-lg border border-gold-400/15 bg-midnight-900/40 px-4 py-3">
       <div>
         <p className="text-xs text-starlight-dim">{label}</p>
         <p className="font-medium tracking-wide text-starlight">{value}</p>

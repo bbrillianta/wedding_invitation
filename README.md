@@ -1,4 +1,4 @@
-# Amara & Kavi's Wedding Invitation
+# Bintang & Mega's Wedding Invitation
 
 A wedding invitation site built with Next.js (App Router, TypeScript, Tailwind CSS), styled with an elegant celestial "star & galaxy" theme.
 
