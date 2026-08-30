@@ -36,12 +36,12 @@ export function formatDate(
     year: "numeric",
   }
 ): string {
-  return new Intl.DateTimeFormat("en-US", options).format(new Date(isoDate));
+  return new Intl.DateTimeFormat("id-ID", options).format(new Date(isoDate));
 }
 
 export function formatTime(
   isoDate: string,
   options: Intl.DateTimeFormatOptions = { hour: "2-digit", minute: "2-digit" }
 ): string {
-  return new Intl.DateTimeFormat("en-US", options).format(new Date(isoDate));
+  return new Intl.DateTimeFormat("id-ID", options).format(new Date(isoDate));
 }

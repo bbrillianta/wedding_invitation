@@ -5,7 +5,7 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useIntroDone } from "@/lib/intro-state";
 
 /**
- * Scroll-triggered entrance for a chunk of the night-theme invitation.
+ * Scroll-triggered entrance for a chunk of the invitation.
  *
  * Wraps its children in a single animated element that starts offset
  * and transparent, then settles once it scrolls into view — so the page

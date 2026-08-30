@@ -32,10 +32,21 @@ export type EWallet = {
   number: string;
 };
 
+export type Parents = {
+  father: string;
+  mother: string;
+};
+
 export type SiteContent = {
   couple: {
     brideName: string;
+    brideFullName: string;
+    bridePhoto: string;
+    brideParents: Parents;
     groomName: string;
+    groomFullName: string;
+    groomPhoto: string;
+    groomParents: Parents;
     monogram: string;
     tagline: string;
   };
@@ -48,6 +59,13 @@ export type SiteContent = {
   hero: {
     heroImage: string;
     subheading: string;
+  };
+  greeting: {
+    bismillah: string;
+    salam: string;
+    verseArabic: string;
+    verseTranslationId: string;
+    verseReference: string;
   };
   events: {
     ceremony: EventDetail;
@@ -67,6 +85,12 @@ export type SiteContent = {
     contactName: string;
     contactPhone: string;
     contactEmail: string;
+  };
+  ucapan: {
+    description: string;
+    namePlaceholder: string;
+    messagePlaceholder: string;
+    submitLabel: string;
   };
   seo: {
     title: string;

@@ -9,7 +9,7 @@ export function LoveStoryTimeline() {
   return (
     <section id="love-story" className="py-20 sm:py-28">
       <Container>
-        <SectionHeading eyebrow="Our journey" title="Love Story" />
+        <SectionHeading eyebrow="Perjalanan Kami" title="Kisah Cinta" />
 
         <ol className="mt-14 space-y-14">
           {loveStory.map((milestone, i) => (
@@ -25,7 +25,7 @@ export function LoveStoryTimeline() {
               y={16}
               duration={0.8}
             >
-              <div className="relative h-40 w-40 shrink-0 overflow-hidden rounded-full border-2 border-gold-400/40">
+              <div className="relative h-40 w-40 shrink-0 overflow-hidden rounded-full border-2 border-blossom-400/60">
                 <Image
                   src={milestone.image}
                   alt={milestone.title}
@@ -35,13 +35,13 @@ export function LoveStoryTimeline() {
                 />
               </div>
               <div className="text-center sm:text-left sm:even:text-right">
-                <p className="text-xs tracking-[0.25em] text-gold-400 uppercase">
+                <p className="text-xs tracking-[0.25em] text-ink-700 uppercase">
                   {milestone.dateLabel} &middot; {String(i + 1).padStart(2, "0")}
                 </p>
-                <h3 className="mt-2 font-serif-display text-xl text-starlight">
+                <h3 className="mt-2 font-serif-display text-xl text-ink-900">
                   {milestone.title}
                 </h3>
-                <p className="mt-2 max-w-md text-sm text-starlight-dim">
+                <p className="mt-2 max-w-md text-sm text-ink-500">
                   {milestone.description}
                 </p>
               </div>

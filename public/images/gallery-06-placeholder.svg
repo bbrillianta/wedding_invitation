@@ -1,18 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800">
   <defs>
     <linearGradient id="g" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#05070f"/>
-      <stop offset="55%" stop-color="#0b1023"/>
-      <stop offset="100%" stop-color="#131a35"/>
+      <stop offset="0%" stop-color="#8dc2f0"/>
+      <stop offset="55%" stop-color="#b2daf7"/>
+      <stop offset="100%" stop-color="#f7d3e5"/>
     </linearGradient>
   </defs>
   <rect width="800" height="800" fill="url(#g)"/>
-  <g fill="#f3e0b3" opacity="0.6">
-    <circle cx="133" cy="100" r="2"/>
-    <circle cx="266" cy="66" r="1.5"/>
-    <circle cx="533" cy="80" r="2"/>
-    <circle cx="666" cy="133" r="1.5"/>
-    <circle cx="400" cy="50" r="1"/>
+  <g fill="#ffffff" opacity="0.7">
+    <path d="M12 0C12.7 6.6 17.4 11.3 24 12c-6.6.7-11.3 5.4-12 12-.7-6.6-5.4-11.3-12-12C6.6 11.3 11.3 6.6 12 0z" transform="translate(133.0 100.0) scale(2.09) translate(-12 -12)"/>
+    <path d="M12 0C12.7 6.6 17.4 11.3 24 12c-6.6.7-11.3 5.4-12 12-.7-6.6-5.4-11.3-12-12C6.6 11.3 11.3 6.6 12 0z" transform="translate(266.0 66.0) scale(1.57) translate(-12 -12)"/>
+    <path d="M12 0C12.7 6.6 17.4 11.3 24 12c-6.6.7-11.3 5.4-12 12-.7-6.6-5.4-11.3-12-12C6.6 11.3 11.3 6.6 12 0z" transform="translate(533.0 80.0) scale(2.09) translate(-12 -12)"/>
+    <path d="M12 0C12.7 6.6 17.4 11.3 24 12c-6.6.7-11.3 5.4-12 12-.7-6.6-5.4-11.3-12-12C6.6 11.3 11.3 6.6 12 0z" transform="translate(666.0 133.0) scale(1.57) translate(-12 -12)"/>
+    <path d="M12 0C12.7 6.6 17.4 11.3 24 12c-6.6.7-11.3 5.4-12 12-.7-6.6-5.4-11.3-12-12C6.6 11.3 11.3 6.6 12 0z" transform="translate(400.0 50.0) scale(1.04) translate(-12 -12)"/>
   </g>
-  <text x="50%" y="52%" font-family="Georgia, serif" font-size="26" letter-spacing="4" fill="#f5f0e6" text-anchor="middle" dominant-baseline="middle" opacity="0.45">GALLERY 06</text>
+  <text x="50%" y="52%" font-family="Georgia, serif" font-size="26" letter-spacing="4" fill="#1f5493" text-anchor="middle" dominant-baseline="middle" opacity="0.5">GALLERY 06</text>
 </svg>

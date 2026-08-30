@@ -1,13 +1,17 @@
 import { Hero } from "@/components/sections/Hero";
+import { OpeningGreeting } from "@/components/sections/OpeningGreeting";
+import { Mempelai } from "@/components/sections/Mempelai";
+import { Countdown } from "@/components/sections/Countdown";
 import { EventDetails } from "@/components/sections/EventDetails";
 import { LoveStoryTimeline } from "@/components/sections/LoveStoryTimeline";
 import { Gallery } from "@/components/sections/Gallery";
+import { UcapanSection } from "@/components/sections/UcapanSection";
 import { GiftInfo } from "@/components/sections/GiftInfo";
-import { RSVPSection } from "@/components/sections/RSVPSection";
 import { ConstellationDivider } from "@/components/layout/ConstellationDivider";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { CloudIntro } from "@/components/intro/CloudIntro";
 import { BackgroundMusic } from "@/components/audio/BackgroundMusic";
+import { RSVPStickyBar } from "@/components/rsvp/RSVPStickyBar";
 import type { Guest } from "@/types";
 
 /**
@@ -22,17 +26,25 @@ export function WeddingInvitation({ guest }: { guest?: Guest | null }) {
       <main id="invitation-content">
         <Hero guest={guest} />
         <ConstellationDivider />
-        <EventDetails />
+        <OpeningGreeting />
+        <ConstellationDivider />
+        <Mempelai />
         <ConstellationDivider />
         <LoveStoryTimeline />
         <ConstellationDivider />
-        <Gallery />
+        <EventDetails />
         <ConstellationDivider />
-        <GiftInfo />
+        <Countdown />
         <ConstellationDivider />
-        <RSVPSection guest={guest} />
+        {/* <Gallery />
+        <ConstellationDivider /> */}
+        <UcapanSection guest={guest} />
+        <ConstellationDivider />
+        {/* <GiftInfo />
+        <ConstellationDivider /> */}
         <SiteFooter />
         <BackgroundMusic />
+        <RSVPStickyBar />
       </main>
     </>
   );

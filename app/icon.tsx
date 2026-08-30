@@ -14,12 +14,14 @@ export default function Icon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#05070f",
+          background: "#4a8ad4",
           borderRadius: "50%",
         }}
       >
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="#d4af7a">
-          <path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" />
+        {/* Same four-pointed sparkle the sky uses (see ui/Sparkle.tsx);
+            inlined because next/og renders this outside React DOM. */}
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#ffffff">
+          <path d="M12 0C12.7 6.6 17.4 11.3 24 12c-6.6.7-11.3 5.4-12 12-.7-6.6-5.4-11.3-12-12C6.6 11.3 11.3 6.6 12 0z" />
         </svg>
       </div>
     ),

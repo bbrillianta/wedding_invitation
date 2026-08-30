@@ -9,17 +9,17 @@ export function GiftInfo() {
   return (
     <section id="gift" className="py-20 sm:py-28">
       <Container>
-        <SectionHeading eyebrow="With love" title="Wedding Gift" />
+        <SectionHeading eyebrow="Dengan Cinta" title="Hadiah Pernikahan" />
         <Reveal y={20} delay={0.2}>
-          <p className="mx-auto mt-6 max-w-md text-center text-sm text-starlight-dim">
+          <p className="mx-auto mt-6 max-w-md text-center text-sm text-ink-500">
             {gift.note}
           </p>
         </Reveal>
 
         <div className="mt-10 grid gap-6 sm:grid-cols-2">
           <Reveal delay={0.3}>
-            <h3 className="mb-3 text-xs tracking-[0.25em] text-gold-400 uppercase">
-              Bank Transfer
+            <h3 className="mb-3 text-xs tracking-[0.25em] text-ink-700 uppercase">
+              Transfer Bank
             </h3>
             <div className="space-y-3">
               {gift.bankTransfers.map((bank) => (
@@ -33,7 +33,7 @@ export function GiftInfo() {
           </Reveal>
 
           <Reveal delay={0.42}>
-            <h3 className="mb-3 text-xs tracking-[0.25em] text-gold-400 uppercase">
+            <h3 className="mb-3 text-xs tracking-[0.25em] text-ink-700 uppercase">
               E-Wallet
             </h3>
             <div className="space-y-3">

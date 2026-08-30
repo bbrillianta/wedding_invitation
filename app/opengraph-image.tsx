@@ -20,8 +20,8 @@ export default async function Image() {
           alignItems: "center",
           justifyContent: "center",
           background:
-            "linear-gradient(180deg, #05070f 0%, #0b1023 55%, #131a35 100%)",
-          color: "#f5f0e6",
+            "linear-gradient(180deg, #1f5da5 0%, #4a8ad4 52%, #b2daf7 100%)",
+          color: "#ffffff",
         }}
       >
         <div
@@ -29,7 +29,7 @@ export default async function Image() {
             fontSize: 28,
             letterSpacing: 8,
             textTransform: "uppercase",
-            color: "#d4af7a",
+            color: "#fcd9e8",
           }}
         >
           We&apos;re getting married
@@ -39,7 +39,7 @@ export default async function Image() {
             display: "flex",
             fontSize: 120,
             marginTop: 24,
-            color: "#f3e0b3",
+            color: "#ffffff",
           }}
         >
           {couple.brideName} &amp; {couple.groomName}

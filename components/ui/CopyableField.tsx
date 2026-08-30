@@ -23,16 +23,16 @@ export function CopyableField({
   }
 
   return (
-    <div className="flex items-center justify-between gap-3 rounded-lg border border-gold-400/15 bg-midnight-900/40 px-4 py-3">
+    <div className="flex items-center justify-between gap-3 rounded-lg border border-white/70 bg-white/55 px-4 py-3">
       <div>
-        <p className="text-xs text-starlight-dim">{label}</p>
-        <p className="font-medium tracking-wide text-starlight">{value}</p>
+        <p className="text-xs text-ink-500">{label}</p>
+        <p className="font-medium tracking-wide text-ink-900">{value}</p>
       </div>
       <button
         type="button"
         onClick={handleCopy}
         aria-label={`Copy ${label}`}
-        className="shrink-0 rounded-full border border-gold-400/30 p-2 text-gold-400 transition hover:bg-gold-400/10"
+        className="shrink-0 rounded-full border border-blossom-400/60 p-2 text-ink-700 transition hover:bg-ink-700/10"
       >
         {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
       </button>

@@ -15,7 +15,7 @@ export function Gallery() {
   return (
     <section id="gallery" className="py-20 sm:py-28">
       <Container className="max-w-4xl">
-        <SectionHeading eyebrow="Moments" title="Gallery" />
+        <SectionHeading eyebrow="Momen Kami" title="Galeri" />
 
         <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
           {gallery.map((image, i) => (
@@ -24,7 +24,7 @@ export function Gallery() {
             // ripple across the grid rather than firing all six at once.
             <Reveal
               key={image.src}
-              className="relative aspect-square overflow-hidden rounded-lg border border-gold-400/15"
+              className="relative aspect-square overflow-hidden rounded-lg border border-white/70"
               y={20}
               scale={0.92}
               delay={i * 0.07}
@@ -33,7 +33,7 @@ export function Gallery() {
               <button
                 type="button"
                 onClick={() => setOpenIndex(i)}
-                aria-label={`View ${image.alt}`}
+                aria-label={`Lihat ${image.alt}`}
                 className="group absolute inset-0"
               >
                 <Image
@@ -54,14 +54,14 @@ export function Gallery() {
           role="dialog"
           aria-modal="true"
           aria-label={gallery[openIndex].alt}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-midnight-950/90 p-6"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-ink-900/85 p-6"
           onClick={() => setOpenIndex(null)}
         >
           <button
             type="button"
             onClick={() => setOpenIndex(null)}
-            aria-label="Close image"
-            className="absolute top-6 right-6 rounded-full border border-gold-400/40 p-2 text-gold-300 transition hover:bg-gold-400/10"
+            aria-label="Tutup gambar"
+            className="absolute top-6 right-6 rounded-full border border-white/50 p-2 text-white transition hover:bg-white/15"
           >
             <X className="h-5 w-5" />
           </button>

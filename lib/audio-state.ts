@@ -3,7 +3,7 @@
 import { useSyncExternalStore } from "react";
 
 /**
- * Module-level control surface for the night theme's background music,
+ * Module-level control surface for the invitation's background music,
  * mirroring intro-state.ts: the <audio> element lives in a component
  * (BackgroundMusic, mounted once inside #invitation-content) but the
  * element that needs to start it — CloudIntro's handoff effect — isn't

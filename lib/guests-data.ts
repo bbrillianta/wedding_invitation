@@ -6,10 +6,10 @@ import type { Guest } from "@/types";
  * lib/guests.ts switches to querying Prisma instead of this array.
  */
 export const guests: Guest[] = [
-  { slug: "keluarga-budi", name: "Budi & Family", groupLabel: "Budi & Family", invitedGuestCount: 4 },
+  { slug: "keluarga-budi", name: "Keluarga Budi", groupLabel: "Keluarga Budi", invitedGuestCount: 4 },
   { slug: "siti-rahma", name: "Siti Rahma", invitedGuestCount: 2 },
   { slug: "andi-wijaya", name: "Andi Wijaya", invitedGuestCount: 1 },
-  { slug: "keluarga-hartono", name: "The Hartono Family", groupLabel: "The Hartono Family", invitedGuestCount: 5 },
+  { slug: "keluarga-hartono", name: "Keluarga Hartono", groupLabel: "Keluarga Hartono", invitedGuestCount: 5 },
   { slug: "dewi-lestari", name: "Dewi Lestari", invitedGuestCount: 2 },
   { slug: "rizky-pratama", name: "Rizky Pratama", invitedGuestCount: 1 },
 ];

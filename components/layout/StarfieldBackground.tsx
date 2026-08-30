@@ -1,41 +1,67 @@
-// Twinkle stars spread across the full sky.
-const TWINKLE_STARS = [
-  { top: "6%", left: "18%", size: 3, delay: "0s" },
-  { top: "10%", left: "40%", size: 2, delay: "0.6s" },
-  { top: "16%", left: "60%", size: 2, delay: "1.2s" },
-  { top: "22%", left: "85%", size: 3, delay: "1.8s" },
-  { top: "28%", left: "10%", size: 2, delay: "2.4s" },
-  { top: "34%", left: "30%", size: 3, delay: "0.3s" },
-  { top: "40%", left: "72%", size: 2, delay: "1.5s" },
-  { top: "48%", left: "20%", size: 2, delay: "2.1s" },
-  { top: "56%", left: "88%", size: 3, delay: "3s" },
-  { top: "64%", left: "8%", size: 2, delay: "0.9s" },
-  { top: "72%", left: "50%", size: 2, delay: "1.7s" },
-  { top: "80%", left: "78%", size: 3, delay: "2.6s" },
-  { top: "4%", left: "50%", size: 2, delay: "3.3s" },
-  { top: "88%", left: "25%", size: 2, delay: "0.4s" },
+import { SparkleField } from "@/components/layout/SparkleField";
+import { CloudShape, cloudAspect } from "@/components/intro/CloudShape";
+import type { CloudDepth, CloudVariant } from "@/components/intro/CloudShape";
+
+/**
+ * Low cloud bank sitting along the bottom of the sky, the same painted
+ * cumulus the intro flies through seen from further off. Positions are
+ * fixed rather than seeded so this layer stays cheap and predictable —
+ * it's scenery behind the content, not a field to fly through. Sunk far
+ * enough below the viewport that only a soft sliver shows, so it never
+ * crosses a section's text.
+ */
+const HORIZON_CLOUDS: Array<{
+  left: number;
+  bottom: number;
+  width: number;
+  drift: number;
+  depth: CloudDepth;
+  variant: CloudVariant;
+  flip?: boolean;
+}> = [
+  { left: 22, bottom: -28, width: 56, drift: 150, depth: "back", variant: 0 },
+  { left: 86, bottom: -31, width: 50, drift: 178, depth: "back", variant: 6, flip: true },
 ];
 
 /**
- * Fixed, full-viewport night sky mounted once in the root layout.
- * Pure CSS (no canvas/JS) so it costs nothing on mobile and respects
- * prefers-reduced-motion automatically via globals.css.
+ * Fixed, full-viewport sky mounted once in the root layout: the pale
+ * horizon end of the palette, a field of four-pointed sparkles, and a
+ * bank of clouds low on the screen.
+ *
+ * Pure CSS animation (no canvas/JS) so it costs nothing on mobile and
+ * respects prefers-reduced-motion via globals.css.
  */
 export function StarfieldBackground() {
   return (
-    <div className="starfield" aria-hidden="true">
-      {TWINKLE_STARS.map((star, i) => (
-        <span
+    <div className="starfield cloud-band" aria-hidden="true">
+      {/* White, matching the intro's sparkles — `sparkle-glow`'s halo is
+          what keeps them visible against the pale lower sky rather than
+          a blue tint standing in for white. */}
+      <SparkleField className="text-starlight sparkle-glow" />
+
+      {HORIZON_CLOUDS.map((cloud, i) => (
+        <div
           key={i}
-          className="starfield-twinkle"
+          className="absolute -translate-x-1/2 opacity-65"
           style={{
-            top: star.top,
-            left: star.left,
-            width: star.size,
-            height: star.size,
-            animationDelay: star.delay,
+            left: `${cloud.left}%`,
+            bottom: `${cloud.bottom}%`,
+            width: `calc(${cloud.width} * var(--cloud-scale) * 1%)`,
+            aspectRatio: cloudAspect(cloud.variant),
           }}
-        />
+        >
+          {/* Drift lives on an inner element so its animated transform
+              never clobbers the centring translate above. */}
+          <div
+            className="cloud-drift h-full w-full"
+            style={{
+              animationDuration: `${cloud.drift}s`,
+              animationDelay: `-${cloud.drift / 3}s`,
+            }}
+          >
+            <CloudShape variant={cloud.variant} depth={cloud.depth} flip={cloud.flip} />
+          </div>
+        </div>
       ))}
     </div>
   );

@@ -19,7 +19,9 @@ const parisienne = Parisienne({
 const jost = Jost({
   variable: "--font-jost",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  // 700 added for the intro panel's bold eyebrow/subheading — without it
+  // `font-bold` synthesizes a faux bold instead of using the real cut.
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 // Set NEXT_PUBLIC_SITE_URL once the site has a real domain (e.g. the
@@ -45,7 +47,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="en"
+      lang="id"
       className={`${cormorant.variable} ${parisienne.variable} ${jost.variable} h-full antialiased`}
     >
       <body className="relative min-h-full">

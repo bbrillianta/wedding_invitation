@@ -1,44 +1,68 @@
 @import "tailwindcss";
 
 :root {
-  /* Midnight sky, top (darkest) to a touch of navy-indigo depth lower down */
-  --color-midnight-950: #05070f;
-  --color-midnight-900: #0b1023;
-  --color-midnight-800: #131a35;
+  /* Daylight sky, zenith (deepest) to horizon (palest). Only the hero
+     and the intro reach up into the deep end of this ramp; the rest of
+     the invitation sits on the pale end so ink text stays readable. */
+  --color-sky-950: #1f5da5;
+  --color-sky-900: #2b6db8;
+  --color-sky-800: #3b7cc9;
+  --color-sky-700: #5c96da;
+  --color-sky-500: #8dc2f0;
+  --color-sky-400: #b2daf7;
+  --color-sky-300: #d5ecfc;
+  --color-sky-200: #ecf7ff;
 
-  /* Dusk intro sky, zenith to horizon. The top stop is deliberately
-     --color-midnight-800: the intro's darkest sky and the invitation's
-     lightest one are the same colour, so the fly-through crossfades
-     between two skies that already share a seam. */
-  --color-sky-dusk-900: #131a35;
-  --color-sky-dusk-700: #2b3157;
-  --color-sky-dusk-500: #4d456c;
-  --color-sky-dusk-300: #8d6774;
-  --color-sky-dusk-100: #cf9375;
+  /* Clouds: white where the sun catches the crown, blush then rose in
+     the shaded underside, violet only on the far layer where haze
+     washes it back toward the sky. */
+  --color-cloud-white: #ffffff;
+  --color-cloud-blush: #fcd9e8;
+  --color-cloud-rose: #f5b3d1;
+  --color-cloud-violet: #ccc6ef;
 
-  /* The last of the sun, sitting below the horizon and lighting the
-     clouds from underneath */
-  --color-dusk-glow: #f7c894;
+  /* Where the intro sky turns as it approaches the cloud sea: blue does
+     not run all the way down to the horizon in the reference art, it
+     goes through lavender into a dusty blush behind the clouds. */
+  --color-sky-lavender: #c3bce8;
+  --color-sky-blush: #e7cee5;
 
-  /* Accents & text */
-  --color-gold-400: #d4af7a;
-  --color-gold-300: #f3e0b3;
-  --color-starlight: #f5f0e6;
-  --color-starlight-dim: #c9c3d6;
+  /* Ink for text on the pale sky and on the frosted panels */
+  --color-ink-900: #133961;
+  --color-ink-700: #1f5493;
+  --color-ink-500: #35547f;
+
+  /* Rose accents, lifted out of the clouds */
+  --color-blossom-700: #b34a7d;
+  --color-blossom-600: #d1699b;
+  --color-blossom-400: #f7b6d2;
+
+  /* Text and sparkles over the deep end of the sky (hero + intro) */
+  --color-starlight: #ffffff;
+  --color-starlight-dim: #eaf6ff;
 }
 
 @theme inline {
-  --color-midnight-950: var(--color-midnight-950);
-  --color-midnight-900: var(--color-midnight-900);
-  --color-midnight-800: var(--color-midnight-800);
-  --color-sky-dusk-900: var(--color-sky-dusk-900);
-  --color-sky-dusk-700: var(--color-sky-dusk-700);
-  --color-sky-dusk-500: var(--color-sky-dusk-500);
-  --color-sky-dusk-300: var(--color-sky-dusk-300);
-  --color-sky-dusk-100: var(--color-sky-dusk-100);
-  --color-dusk-glow: var(--color-dusk-glow);
-  --color-gold-400: var(--color-gold-400);
-  --color-gold-300: var(--color-gold-300);
+  --color-sky-950: var(--color-sky-950);
+  --color-sky-900: var(--color-sky-900);
+  --color-sky-800: var(--color-sky-800);
+  --color-sky-700: var(--color-sky-700);
+  --color-sky-500: var(--color-sky-500);
+  --color-sky-400: var(--color-sky-400);
+  --color-sky-300: var(--color-sky-300);
+  --color-sky-200: var(--color-sky-200);
+  --color-cloud-white: var(--color-cloud-white);
+  --color-cloud-blush: var(--color-cloud-blush);
+  --color-cloud-rose: var(--color-cloud-rose);
+  --color-cloud-violet: var(--color-cloud-violet);
+  --color-sky-lavender: var(--color-sky-lavender);
+  --color-sky-blush: var(--color-sky-blush);
+  --color-ink-900: var(--color-ink-900);
+  --color-ink-700: var(--color-ink-700);
+  --color-ink-500: var(--color-ink-500);
+  --color-blossom-700: var(--color-blossom-700);
+  --color-blossom-600: var(--color-blossom-600);
+  --color-blossom-400: var(--color-blossom-400);
   --color-starlight: var(--color-starlight);
   --color-starlight-dim: var(--color-starlight-dim);
 
@@ -48,22 +72,25 @@
 }
 
 body {
-  background: var(--color-midnight-950);
-  color: var(--color-starlight);
+  background: var(--color-sky-300);
+  color: var(--color-ink-900);
   font-family: var(--font-body);
 }
 
 ::selection {
-  background: var(--color-gold-400);
-  color: var(--color-midnight-950);
+  background: var(--color-blossom-400);
+  color: var(--color-ink-900);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-gold-400);
+  outline: 2px solid var(--color-ink-700);
   outline-offset: 3px;
 }
 
-/* Night sky background: subtle depth gradient + full-height stars */
+/* Sky background behind the invitation: the pale, horizon end of the
+   same ramp the hero and the intro open on, so scrolling out of the
+   hero reads as coming down out of the deep blue rather than as a
+   change of scene. */
 .starfield {
   position: fixed;
   inset: 0;
@@ -72,78 +99,59 @@ body {
   overflow: hidden;
   background: linear-gradient(
     to bottom,
-    var(--color-midnight-950) 0%,
-    var(--color-midnight-900) 55%,
-    var(--color-midnight-800) 100%
+    var(--color-sky-500) 0%,
+    var(--color-sky-400) 32%,
+    var(--color-sky-300) 66%,
+    var(--color-sky-200) 100%
   );
 }
 
-/* Star layer: tiled dots across the full sky */
-.starfield::before {
-  content: "";
+/* Four-pointed sparkles, drawn as SVG rather than round dots so they
+   keep the star shape at every size. Colour comes from `currentColor`,
+   which lets the same field read as white over the deep intro sky and
+   as soft blue over the pale invitation sky. */
+.sparkle {
   position: absolute;
-  inset: 0;
-  background-image:
-    radial-gradient(1.5px 1.5px at 20% 30%, var(--color-starlight) 100%, transparent),
-    radial-gradient(1px 1px at 65% 15%, var(--color-starlight) 100%, transparent),
-    radial-gradient(1.5px 1.5px at 80% 60%, var(--color-gold-300) 100%, transparent),
-    radial-gradient(1px 1px at 40% 80%, var(--color-starlight) 100%, transparent),
-    radial-gradient(1px 1px at 10% 65%, var(--color-starlight) 100%, transparent),
-    radial-gradient(1.5px 1.5px at 90% 90%, var(--color-starlight) 100%, transparent),
-    radial-gradient(1px 1px at 50% 45%, var(--color-gold-300) 100%, transparent),
-    radial-gradient(1px 1px at 30% 10%, var(--color-starlight) 100%, transparent);
-  background-repeat: repeat;
-  background-size: 220px 220px;
-  animation: drift 120s linear infinite;
-}
-
-.starfield-twinkle {
-  position: absolute;
-  border-radius: 9999px;
-  background: var(--color-gold-300);
-  box-shadow: 0 0 6px 1px rgba(243, 224, 179, 0.8);
   animation: twinkle 4s ease-in-out infinite;
 }
 
-/* Dusk sky for the intro screen: night already gathering overhead,
-   the last warm light still on the horizon. */
-.dusk-sky {
+.sparkle-glow {
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.85));
+}
+
+/* Intro sky: a clear mid blue overhead falling to a pale, sunlit
+   horizon. It is cut from the same ramp as the hero's scrim and the
+   invitation's background — the intro just sits a few stops higher up
+   it — so the fly-through crossfades between skies that already share
+   a seam rather than cutting to a different scene. */
+.dawn-sky {
   background: linear-gradient(
     to bottom,
-    var(--color-sky-dusk-900) 0%,
-    var(--color-sky-dusk-700) 26%,
-    var(--color-sky-dusk-500) 52%,
-    var(--color-sky-dusk-300) 78%,
-    var(--color-sky-dusk-100) 100%
+    var(--color-sky-800) 0%,
+    var(--color-sky-700) 32%,
+    var(--color-sky-500) 58%,
+    var(--color-sky-lavender) 80%,
+    var(--color-sky-blush) 100%
   );
 }
 
-/* The light source the clouds are lit by — a low, wide bloom sitting
-   just under the horizon rather than a visible sun disc. */
-.dusk-glow {
+/* The light the clouds are lit by: a wide, pale bloom sitting just
+   under the horizon rather than a visible sun disc. */
+.dawn-glow {
   background: radial-gradient(
-    ellipse 80% 100% at 50% 118%,
-    color-mix(in srgb, var(--color-dusk-glow) 72%, transparent) 0%,
-    color-mix(in srgb, var(--color-dusk-glow) 34%, transparent) 38%,
-    transparent 72%
+    ellipse 80% 100% at 50% 116%,
+    rgba(255, 246, 251, 0.7) 0%,
+    rgba(250, 226, 240, 0.32) 42%,
+    transparent 76%
   );
   pointer-events: none;
 }
 
-/* First stars, only in the darkest band overhead. Same tile as the
-   night starfield so the intro sky and the invitation sky are visibly
-   the same sky at two different hours. */
-.dusk-stars {
-  background-image:
-    radial-gradient(1.5px 1.5px at 20% 30%, var(--color-starlight) 100%, transparent),
-    radial-gradient(1px 1px at 65% 15%, var(--color-starlight) 100%, transparent),
-    radial-gradient(1px 1px at 40% 80%, var(--color-gold-300) 100%, transparent),
-    radial-gradient(1px 1px at 88% 62%, var(--color-starlight) 100%, transparent),
-    radial-gradient(1px 1px at 30% 10%, var(--color-starlight) 100%, transparent);
-  background-repeat: repeat;
-  background-size: 220px 220px;
-  opacity: 0.55;
-  mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.45) 30%, transparent 52%);
+/* Sparkles only in the deep band overhead, where white still reads
+   against the sky — which is also the band the cloud field deliberately
+   leaves empty, so they have clear blue to sit against. */
+.dawn-sparkles {
+  mask-image: linear-gradient(to bottom, #000 0%, #000 22%, rgba(0, 0, 0, 0.55) 42%, transparent 64%);
   pointer-events: none;
 }
 
@@ -161,6 +169,19 @@ body {
   }
 }
 
+/* The hero's and the background's cloud banks are scenery, not a field
+   to fly through: they scale up on narrow screens too, but far less,
+   so a phone doesn't end up with two clouds swallowing the layout. */
+.cloud-band {
+  --cloud-scale: 1;
+}
+
+@media (max-width: 700px) {
+  .cloud-band {
+    --cloud-scale: 1.45;
+  }
+}
+
 /* Gentle idle sway for the intro clouds. Kept on its own element so
    this transform never collides with the motion-driven translateZ that
    powers the fly-through. Duration/delay are set per cloud inline. */
@@ -171,24 +192,35 @@ body {
   animation-direction: alternate;
 }
 
-@keyframes drift {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: -220px 220px;
-  }
+/* Soft white glow behind display type sitting straight on the sky. */
+.text-glow {
+  text-shadow:
+    0 0 18px rgba(255, 255, 255, 0.55),
+    0 0 48px rgba(120, 180, 240, 0.65);
+}
+
+/* Tight white halo for dark ink text sitting on the intro's frosted
+   panel now that the panel itself is mostly transparent: a cloud can
+   pass directly behind a letter, so the halo — not the panel tint — is
+   what keeps the glyph readable regardless of what's behind it. Kept
+   close to the glyph rather than a wide blur, or dark text on a light
+   halo starts looking hazy instead of crisp. */
+.text-halo {
+  text-shadow:
+    0 1px 2px rgba(255, 255, 255, 0.9),
+    0 0 6px rgba(255, 255, 255, 0.85),
+    0 0 16px rgba(255, 255, 255, 0.6);
 }
 
 @keyframes twinkle {
   0%,
   100% {
-    opacity: 0.15;
-    transform: scale(0.8);
+    opacity: 0.2;
+    transform: scale(0.7) rotate(0deg);
   }
   50% {
     opacity: 1;
-    transform: scale(1.2);
+    transform: scale(1.15) rotate(12deg);
   }
 }
 
@@ -202,12 +234,9 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .starfield::before {
+  .sparkle {
     animation: none;
-  }
-  .starfield-twinkle {
-    animation: none;
-    opacity: 0.6;
+    opacity: 0.7;
   }
   .cloud-drift {
     animation: none;

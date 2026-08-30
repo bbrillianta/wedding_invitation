@@ -1,9 +1,9 @@
 import Image from "next/image";
 import { siteContent } from "@/lib/content";
 import { formatDate } from "@/lib/utils";
-import { Countdown } from "@/components/sections/Countdown";
 import { ConstellationDivider } from "@/components/layout/ConstellationDivider";
 import { Reveal } from "@/components/ui/Reveal";
+import { ShootingStar } from "@/components/sections/ShootingStar";
 import type { Guest } from "@/types";
 
 export function Hero({ guest }: { guest?: Guest | null }) {
@@ -24,27 +24,32 @@ export function Hero({ guest }: { guest?: Guest | null }) {
           priority
           className="object-cover opacity-15"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-midnight-950/30 via-midnight-950/60 to-midnight-950" />
+        {/* Deep at the top, falling to the pale `sky-400` the fixed sky
+            background starts on, so the hero's bottom edge and the sky
+            behind the rest of the page meet without a seam. */}
+        <div className="absolute inset-0 bg-gradient-to-b from-sky-900/95 via-sky-800/88 to-sky-400" />
       </div>
+
+      <ShootingStar />
 
       {greetingName && (
         <Reveal y={16} delay={0.1}>
           <p className="mb-4 text-sm tracking-[0.2em] text-starlight-dim uppercase">
-            Dear {greetingName}
+            Kepada Yth. {greetingName}
           </p>
         </Reveal>
       )}
 
       <Reveal y={16} delay={0.2}>
-        <p className="text-xs tracking-[0.35em] text-gold-400 uppercase">
+        <p className="text-xs tracking-[0.35em] text-starlight uppercase">
           We&apos;re getting married
         </p>
       </Reveal>
 
       <Reveal y={24} delay={0.3} duration={0.9}>
-        <h1 className="mt-6 font-script text-6xl leading-tight text-gold-300 sm:text-7xl">
-          {couple.brideName} <span className="text-starlight">&amp;</span>{" "}
-          {couple.groomName}
+        <h1 className="text-glow mt-6 font-script text-6xl leading-tight text-starlight sm:text-7xl">
+          {couple.groomName} <span className="text-cloud-blush">&amp;</span>{" "}
+          {couple.brideName}
         </h1>
       </Reveal>
 
@@ -54,18 +59,14 @@ export function Hero({ guest }: { guest?: Guest | null }) {
         </p>
       </Reveal>
 
-      <ConstellationDivider className="mt-8" delay={0.6} />
+      {/* Light tone: this one sits on the hero's deep blue, not the
+          pale sky the rest of the dividers do. */}
+      <ConstellationDivider className="mt-8 text-cloud-blush" delay={0.6} />
 
       <Reveal y={16} delay={0.7}>
         <p className="font-serif-display text-lg text-starlight sm:text-xl">
           {formatDate(weddingDateISO)}
         </p>
-      </Reveal>
-
-      <Reveal y={20} delay={0.85}>
-        <div className="mt-10">
-          <Countdown targetISO={weddingDateISO} />
-        </div>
       </Reveal>
     </section>
   );

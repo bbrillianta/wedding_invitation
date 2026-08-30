@@ -8,13 +8,13 @@ import type { EventDetail } from "@/types";
 
 function EventCard({ event }: { event: EventDetail }) {
   return (
-    <div className="rounded-2xl border border-gold-400/20 bg-midnight-900/60 p-6 backdrop-blur-sm sm:p-8">
-      <h3 className="font-serif-display text-2xl text-gold-300">
+    <div className="rounded-2xl border border-white/70 bg-white/60 p-6 backdrop-blur-sm sm:p-8">
+      <h3 className="font-serif-display text-2xl text-blossom-700">
         {event.name}
       </h3>
 
       <div className="mt-4 flex items-start gap-3 text-sm">
-        <Clock className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" aria-hidden="true" />
+        <Clock className="mt-0.5 h-4 w-4 shrink-0 text-ink-700" aria-hidden="true" />
         <p>
           {formatDate(event.dateTimeISO)}
           <br />
@@ -23,7 +23,7 @@ function EventCard({ event }: { event: EventDetail }) {
       </div>
 
       <div className="mt-3 flex items-start gap-3 text-sm">
-        <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold-400" aria-hidden="true" />
+        <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-ink-700" aria-hidden="true" />
         <p>
           {event.venueName}
           <br />
@@ -35,17 +35,17 @@ function EventCard({ event }: { event: EventDetail }) {
         href={event.mapLink}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-4 inline-block text-sm font-medium text-gold-400 underline decoration-gold-400/40 underline-offset-4 transition hover:text-gold-300"
+        className="mt-4 inline-block text-sm font-medium text-ink-700 underline decoration-ink-700/40 underline-offset-4 transition hover:text-blossom-700"
       >
-        View on map
+        Lihat di Peta
       </a>
 
-      <div className="mt-5 overflow-hidden rounded-xl border border-gold-400/10">
+      <div className="mt-5 overflow-hidden rounded-xl border border-white/70">
         <iframe
           src={event.mapEmbedUrl}
           title={`Map to ${event.venueName}`}
           loading="lazy"
-          className="h-48 w-full grayscale invert-[0.9] contrast-[0.85]"
+          className="h-48 w-full saturate-[0.85] contrast-[0.95]"
           referrerPolicy="no-referrer-when-downgrade"
         />
       </div>
@@ -58,7 +58,7 @@ export function EventDetails() {
   return (
     <section id="event-details" className="py-20 sm:py-28">
       <Container>
-        <SectionHeading eyebrow="Save the date" title="Event Details" />
+        <SectionHeading eyebrow="Save The Date" title="Acara" />
         <div className="mt-12 grid gap-6 sm:grid-cols-2">
           {/* Akad lands first, Resepsi a beat later — same order they
               happen in, and it keeps the pair from popping as one block. */}
@@ -70,6 +70,12 @@ export function EventDetails() {
           </Reveal>
         </div>
       </Container>
+
+      {/* Marks where the Resepsi card ends, on mobile's single-column
+          stack and desktop's side-by-side grid alike — <RSVPStickyBar>
+          watches this to know when the guest has actually reached the
+          event details, not just the top of this section. */}
+      <div id="acara-end" aria-hidden="true" />
     </section>
   );
 }

@@ -1,6 +1,6 @@
 # Bintang & Mega's Wedding Invitation
 
-A wedding invitation site built with Next.js (App Router, TypeScript, Tailwind CSS), styled with an elegant celestial "star & galaxy" theme.
+A wedding invitation site built with Next.js (App Router, TypeScript, Tailwind CSS), styled with a pastel "sky & clouds" theme — a blue daylight sky, pink cumulus, and four-pointed sparkles.
 
 ## Status: Phase 1 (static)
 

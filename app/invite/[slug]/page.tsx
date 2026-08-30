@@ -21,7 +21,7 @@ export async function generateMetadata({
   const name = guest?.groupLabel ?? guest?.name;
 
   const title = name
-    ? `You're invited, ${name}! — ${siteContent.seo.title}`
+    ? `Anda diundang, ${name}! — ${siteContent.seo.title}`
     : siteContent.seo.title;
 
   return {

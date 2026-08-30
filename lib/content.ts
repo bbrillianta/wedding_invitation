@@ -8,27 +8,43 @@ import { withBasePath } from "@/lib/utils";
  */
 export const siteContent: SiteContent = {
   couple: {
-    brideName: "Bintang",
-    groomName: "Mega",
+    brideName: "Mega",
+    brideFullName: "Mega Putri Rahmawati Darta",
+    bridePhoto: withBasePath("/images/couples/mega.jpeg"),
+    brideParents: { father: "Alm. Sudarto Seputro", mother: "Endang Sumiati" },
+    groomName: "Bintang",
+    groomFullName: "Brillianta Bintang Virgantara",
+    groomPhoto: withBasePath("/images/couples/bintang.jpeg"),
+    groomParents: { father: "Dwi Nugroho Widi", mother: "Rini Setiawati" },
     monogram: "B & M",
-    tagline: "Two stars, one constellation",
+    tagline: "Love as boundless as the sky",
   },
   weddingDateISO: "2026-11-28T09:00:00+07:00",
   intro: {
-    eyebrow: "You're Invited",
-    subheading: "to the wedding of",
-    buttonLabel: "Open Invitation",
+    eyebrow: "Anda Diundang",
+    subheading: "dalam pernikahan",
+    buttonLabel: "Buka Undangan",
   },
   hero: {
     heroImage: withBasePath("/images/hero-placeholder.svg"),
-    subheading: "Together with our families, we invite you to celebrate our wedding",
+    subheading:
+      "Bersama keluarga besar kami, dengan penuh syukur mengundang Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa restu.",
+  },
+  greeting: {
+    bismillah: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+    salam: "Assalamu'alaikum Warahmatullahi Wabarakatuh",
+    verseArabic:
+      "وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً",
+    verseTranslationId:
+      "\"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya di antaramu rasa kasih dan sayang.\"",
+    verseReference: "QS. Ar-Rum: 21",
   },
   events: {
     ceremony: {
       name: "Akad",
       dateTimeISO: "2026-11-26T08:00:00+07:00",
       venueName: "Masjid Namira",
-      address: "Gresik, Jawa Timur",
+      address: "Lamongan, Jawa Timur",
       mapEmbedUrl: "https://www.google.com/maps?q=-7.1526463,112.4084817&output=embed",
       mapLink: "https://maps.app.goo.gl/NHtFBQSd9stBLU7Q7",
     },
@@ -36,45 +52,45 @@ export const siteContent: SiteContent = {
       name: "Resepsi",
       dateTimeISO: "2026-11-28T11:00:00+07:00",
       venueName: "Gedung Wanita Candra Kencana",
-      address: "Sidoarjo, Jawa Timur",
+      address: "Surabaya, Jawa Timur",
       mapEmbedUrl: "https://www.google.com/maps?q=-7.2878229,112.7618051&output=embed",
       mapLink: "https://maps.app.goo.gl/efn4TMUNne1WmWZC9",
     },
   },
   loveStory: [
     {
-      dateLabel: "August 2021",
-      title: "Under the Same Sky",
+      dateLabel: "Agustus 2019",
+      title: "Dipertemukan Dalam Satu Kampus",
       description:
-        "A chance meeting at a mutual friend's rooftop stargazing party — we talked until sunrise and never really stopped.",
-      image: withBasePath("/images/story-01-placeholder.svg"),
+        "Menjadi rekan satu kelas, bersama selama 3 tahun sebagai teman dekat di kampus.",
+      image: withBasePath("/images/stories/beginning.jpeg"),
     },
     {
-      dateLabel: "March 2023",
-      title: "The Question",
+      dateLabel: "Maret 2024",
+      title: "Dipertemukan Kembali",
       description:
-        "On a quiet hilltop far from city lights, surrounded by more stars than we'd ever seen, Bintang and Mega promised each other forever.",
-      image: withBasePath("/images/story-02-placeholder.svg"),
+        "Perjuangan Bintang yang tak berhenti mengejar Mega, membuat Mega untuk membuka hati dan saling mengenal lebih dalam.",
+      image: withBasePath("/images/stories/graduate.jpg"),
     },
     {
-      dateLabel: "November 2026",
-      title: "Happily Ever After",
+      dateLabel: "Maret 2026",
+      title: "Memutuskan menuju jenjang serius",
       description:
-        "We're gathering the people we love most to celebrate the beginning of our next chapter together.",
-      image: withBasePath("/images/story-03-placeholder.svg"),
+        "Setelah saling mengenal, Bintang memantapkan niat baiknya untuk melamar Mega bersama keluarga besarnya.",
+      image: withBasePath("/images/stories/engagement.jpeg"),
     },
   ],
   gallery: [
-    { src: withBasePath("/images/gallery-01-placeholder.svg"), alt: "Bintang and Mega placeholder photo 1" },
-    { src: withBasePath("/images/gallery-02-placeholder.svg"), alt: "Bintang and Mega placeholder photo 2" },
-    { src: withBasePath("/images/gallery-03-placeholder.svg"), alt: "Bintang and Mega placeholder photo 3" },
-    { src: withBasePath("/images/gallery-04-placeholder.svg"), alt: "Bintang and Mega placeholder photo 4" },
-    { src: withBasePath("/images/gallery-05-placeholder.svg"), alt: "Bintang and Mega placeholder photo 5" },
-    { src: withBasePath("/images/gallery-06-placeholder.svg"), alt: "Bintang and Mega placeholder photo 6" },
+    { src: withBasePath("/images/gallery-01-placeholder.svg"), alt: "Foto Bintang dan Mega 1" },
+    { src: withBasePath("/images/gallery-02-placeholder.svg"), alt: "Foto Bintang dan Mega 2" },
+    { src: withBasePath("/images/gallery-03-placeholder.svg"), alt: "Foto Bintang dan Mega 3" },
+    { src: withBasePath("/images/gallery-04-placeholder.svg"), alt: "Foto Bintang dan Mega 4" },
+    { src: withBasePath("/images/gallery-05-placeholder.svg"), alt: "Foto Bintang dan Mega 5" },
+    { src: withBasePath("/images/gallery-06-placeholder.svg"), alt: "Foto Bintang dan Mega 6" },
   ],
   gift: {
     note:
-      "Your presence is the greatest gift of all. For those who wish to send a token of love from afar, we've included our details below.",
+      "Kehadiran Anda adalah hadiah terbesar bagi kami. Bagi yang ingin memberikan tanda kasih dari jauh, kami sertakan informasi berikut.",
     bankTransfers: [
       { bankName: "Bank Central Asia (BCA)", accountName: "Bintang Putri", accountNumber: "1234567890" },
       { bankName: "Bank Mandiri", accountName: "Mega Wirawan", accountNumber: "0987654321" },
@@ -92,10 +108,17 @@ export const siteContent: SiteContent = {
     contactPhone: "+62 812-3456-7890",
     contactEmail: "hello@bintang-mega.wedding",
   },
-  seo: {
-    title: "Bintang & Mega's Wedding",
+  ucapan: {
     description:
-      "Join us as we celebrate the wedding of Bintang and Mega — under the stars, with the people we love most.",
-    ogImageAlt: "Bintang & Mega Wedding Invitation",
+      "Doa dan ucapan dari Anda sangat berarti bagi kami. Kirimkan lewat pesan singkat berikut.",
+    namePlaceholder: "Nama Anda",
+    messagePlaceholder: "Tuliskan ucapan dan doa Anda di sini...",
+    submitLabel: "Kirim Ucapan",
+  },
+  seo: {
+    title: "Pernikahan Bintang & Mega",
+    description:
+      "Bergabunglah bersama kami merayakan pernikahan Bintang dan Mega — di bawah bintang, bersama orang-orang yang kami cintai.",
+    ogImageAlt: "Undangan Pernikahan Bintang & Mega",
   },
 };

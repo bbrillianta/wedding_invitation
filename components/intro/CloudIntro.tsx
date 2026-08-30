@@ -5,8 +5,9 @@ import { motion, useReducedMotion } from "framer-motion";
 import { siteContent } from "@/lib/content";
 import { markIntroDone, resetIntro } from "@/lib/intro-state";
 import { startBackgroundMusic } from "@/lib/audio-state";
-import { CloudDefs, CloudShape } from "@/components/intro/CloudShape";
+import { CloudShape, cloudAspect } from "@/components/intro/CloudShape";
 import type { CloudDepth, CloudVariant } from "@/components/intro/CloudShape";
+import { SparkleField } from "@/components/layout/SparkleField";
 import type { Guest } from "@/types";
 
 type Phase = "intro" | "transitioning" | "done";
@@ -27,113 +28,87 @@ const PERSPECTIVE = 1000;
 
 const DEPTH: Record<
   CloudDepth,
-  { z: number; duration: number; delay: number; opacity: number; size: [number, number] }
+  { z: number; duration: number; delay: number; opacity: number }
 > = {
   // z 550 -> ~2.2x, the distant layer barely moves: parallax anchor.
-  // Its low opacity is the other half of the aerial perspective the
+  // Its lower opacity is the other half of the aerial perspective the
   // washed-out `back` gradient already starts.
-  back: { z: 550, duration: 1.9, delay: 0.12, opacity: 0.72, size: [15, 21] },
+  back: { z: 550, duration: 1.9, delay: 0.12, opacity: 0.72 },
   // z 820 -> ~5x
-  mid: { z: 820, duration: 1.6, delay: 0.06, opacity: 0.9, size: [21, 29] },
+  mid: { z: 820, duration: 1.6, delay: 0.06, opacity: 0.93 },
   // z 935 -> ~15x, the near layer tears past the camera first.
-  front: { z: 935, duration: 1.35, delay: 0, opacity: 1, size: [29, 40] },
+  front: { z: 935, duration: 1.35, delay: 0, opacity: 1 },
 };
 
 const TRANSITION_MS = 2050;
 
 type Cloud = {
+  /** Horizontal centre, in viewport-width percent. */
   left: number;
-  top: number;
+  /** Offset of the element's bottom edge, in viewport-height percent. */
+  bottom: number;
+  /** Width in viewport-width percent, before `--cloud-scale`. */
   width: number;
   depth: CloudDepth;
   variant: CloudVariant;
   driftDuration: number;
-  driftDelay: number;
-  /** Pre-baked `filter` value; see `lightingFor`. */
-  lighting: string;
+  /** Mirrors the drawing, so one shape can serve as two. */
+  flip?: boolean;
+  /**
+   * Casts a soft shadow *upward*, onto whatever sits behind. Only the
+   * foreground carries it; it is a real filter and not free.
+   */
+  shadow?: boolean;
 };
 
 /**
- * The light is under the horizon, so how lit a cloud is depends on how
- * far down the sky it sits: the ones overhead fall away to cool, nearly
- * silhouetted shapes, while the ones near the horizon take the warm
- * glow full on. CloudShape's gradients handle top-to-bottom shading
- * *within* one cloud; this handles the difference *between* clouds,
- * which is what stops the field reading as one shape stamped out forty
- * times. `top` spans the field's -12..112 overhang, not just 0..100.
+ * A hand-composed cloudscape rather than a scattered field.
+ *
+ * These are discrete clouds now, each a piece of real artwork (see
+ * CloudShape), so the sky is built by *placing* them: a bank across the
+ * bottom that rises from a low, trailing tail on the left up to its
+ * tallest mass on the right — the reference art's composition — with a
+ * couple of small clouds drifting alone in the clear blue above it.
+ * Overlap between neighbours is what makes the bank read as one
+ * continuous cloudscape instead of a row of separate cut-outs, so it is
+ * deliberate, not incidental.
+ *
+ * Order matters: this array is painted back-to-front, so a later entry
+ * always occludes an earlier one.
  */
-function lightingFor(top: number): string {
-  const t = Math.min(1, Math.max(0, (top + 12) / 124));
-  const brightness = (0.78 + t * 0.36).toFixed(3);
-  const saturate = (0.78 + t * 0.28).toFixed(3);
-  return `brightness(${brightness}) saturate(${saturate})`;
-}
+const CLOUDS: Cloud[] = [
+  // Alone in the blue: small, pale, well apart from the bank.
+  { left: 17, bottom: 75, width: 13, depth: "back", variant: 1, driftDuration: 222 },
+  { left: 83, bottom: 81, width: 10, depth: "back", variant: 6, driftDuration: 206, flip: true },
+  { left: 47, bottom: 66, width: 8, depth: "back", variant: 3, driftDuration: 240 },
 
-/** Deterministic PRNG so the server and client render an identical field. */
-function mulberry32(seed: number) {
-  return function () {
-    seed |= 0;
-    seed = (seed + 0x6d2b79f5) | 0;
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
+  // Far skyline. Heights climb left to right and stay uneven — evenly
+  // spaced tiers read as horizontal stripes rather than as a sky.
+  { left: -8, bottom: 30, width: 30, depth: "back", variant: 0, driftDuration: 196 },
+  { left: 18, bottom: 22, width: 26, depth: "back", variant: 2, driftDuration: 188, flip: true },
+  { left: 42, bottom: 33, width: 28, depth: "back", variant: 6, driftDuration: 202 },
+  { left: 66, bottom: 43, width: 30, depth: "back", variant: 5, driftDuration: 178 },
+  { left: 90, bottom: 51, width: 26, depth: "back", variant: 1, driftDuration: 192, flip: true },
+  { left: 113, bottom: 45, width: 24, depth: "back", variant: 4, driftDuration: 210, flip: true },
 
-/**
- * Dense field built from a jittered grid that overhangs every edge, so
- * clouds wrap the whole viewport instead of dotting it. `left`/`top`
- * are the cloud's centre (the element is translated by -50%), which is
- * what makes the keep-clear test around the welcome panel meaningful:
- * clouds centred behind the panel skip the near layer, so the frosted
- * card never has a hard, high-contrast cloud rim cutting across it.
- * They keep their normal size, though — the panel carries readability
- * on its own now, so the field no longer needs a bald patch.
- */
-function buildClouds(): Cloud[] {
-  const rand = mulberry32(20261128);
-  const COLS = 7;
-  const ROWS = 6;
-  const clouds: Cloud[] = [];
+  // Middle bank, filling the gaps and continuing the climb.
+  { left: -10, bottom: 9, width: 38, depth: "mid", variant: 4, driftDuration: 168 },
+  { left: 16, bottom: 3, width: 34, depth: "mid", variant: 1, driftDuration: 182 },
+  { left: 41, bottom: 13, width: 36, depth: "mid", variant: 6, driftDuration: 160, flip: true },
+  { left: 67, bottom: 23, width: 40, depth: "mid", variant: 2, driftDuration: 176 },
+  { left: 95, bottom: 29, width: 38, depth: "mid", variant: 5, driftDuration: 166, flip: true },
+  { left: 121, bottom: 21, width: 30, depth: "mid", variant: 0, driftDuration: 172, flip: true },
 
-  for (let col = 0; col < COLS; col++) {
-    for (let row = 0; row < ROWS; row++) {
-      const x = -12 + (col * 124) / (COLS - 1) + (rand() - 0.5) * 16;
-      const y = -12 + (row * 124) / (ROWS - 1) + (rand() - 0.5) * 16;
-
-      const behindPanel = Math.abs(x - 50) < 30 && Math.abs(y - 50) < 24;
-      const roll = rand();
-      const depth: CloudDepth = behindPanel
-        ? roll < 0.6
-          ? "back"
-          : "mid"
-        : roll < 0.32
-          ? "back"
-          : roll < 0.72
-            ? "mid"
-            : "front";
-
-      const [minSize, maxSize] = DEPTH[depth].size;
-
-      clouds.push({
-        left: x,
-        top: y,
-        width: minSize + rand() * (maxSize - minSize),
-        depth,
-        variant: (Math.floor(rand() * 3) % 3) as CloudVariant,
-        driftDuration: 70 + rand() * 70,
-        driftDelay: -rand() * 70,
-        lighting: lightingFor(y),
-      });
-    }
-  }
-
-  // Nearest clouds last so they paint over the distant layer.
-  const order: Record<CloudDepth, number> = { back: 0, mid: 1, front: 2 };
-  return clouds.sort((a, b) => order[a.depth] - order[b.depth]);
-}
-
-const CLOUDS = buildClouds();
+  // Foreground: largest, lowest, closes the bottom edge so no gap shows
+  // the sky through as a hole punched in the bank. The tower (variant 5)
+  // sits right of centre as the tallest mass, per the reference.
+  { left: -6, bottom: -10, width: 48, depth: "front", variant: 0, driftDuration: 138, shadow: true },
+  { left: 22, bottom: -14, width: 46, depth: "front", variant: 1, driftDuration: 128, shadow: true, flip: true },
+  { left: 50, bottom: -8, width: 50, depth: "front", variant: 6, driftDuration: 132, shadow: true },
+  { left: 78, bottom: 0, width: 58, depth: "front", variant: 5, driftDuration: 118, shadow: true },
+  { left: 108, bottom: -6, width: 46, depth: "front", variant: 2, driftDuration: 124, shadow: true, flip: true },
+  { left: 132, bottom: -16, width: 40, depth: "front", variant: 4, driftDuration: 114, shadow: true, flip: true },
+];
 
 export function CloudIntro({ guest }: { guest?: Guest | null }) {
   const [phase, setPhase] = useState<Phase>("intro");
@@ -166,7 +141,7 @@ export function CloudIntro({ guest }: { guest?: Guest | null }) {
   // Releasing the reveals is tied to the phase rather than fired inline
   // from handleEnter, so the reduced-motion path (which jumps straight
   // to "done") and the animated path both hand over at the same moment.
-  // Music starts here too — the sky is fully dusk-free by "done", so
+  // Music starts here too — the intro sky is fully gone by "done", so
   // sound and sight change over together instead of audio leading the
   // reveal.
   useEffect(() => {
@@ -192,23 +167,23 @@ export function CloudIntro({ guest }: { guest?: Guest | null }) {
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden" onClick={handleEnter}>
-      <CloudDefs />
-
       {/* Sky clears before the clouds finish, so the last of them streak
-          past against the revealed night sky. Dusk already sits most of
-          the way to midnight, so this reads as the light going out
-          rather than a hard cut from day to night. */}
+          past against the revealed invitation sky. Both skies are cut
+          from the same ramp — the intro just sits higher up it — so this
+          reads as dropping out of the blue toward the horizon rather
+          than as a cut to a different scene. */}
       <motion.div
-        className="dusk-sky absolute inset-0"
+        className="dawn-sky absolute inset-0"
         aria-hidden="true"
         animate={{ opacity: transitioning ? 0 : 1 }}
         transition={{ duration: 1, delay: transitioning ? 0.45 : 0 }}
       >
-        {/* Early stars in the darkest part of the sky — the first hint of
-            the starfield waiting underneath. */}
-        <div className="dusk-stars absolute inset-0" />
-        {/* The light source the cloud undersides are lit by. */}
-        <div className="dusk-glow absolute inset-x-0 bottom-0 h-2/3" />
+        {/* Sparkles in the deep band overhead — the same field that
+            waits on the invitation sky underneath, in white while the
+            sky behind them is still dark enough to carry it. */}
+        <SparkleField className="dawn-sparkles text-starlight sparkle-glow" />
+        {/* The light source the clouds are lit by. */}
+        <div className="dawn-glow absolute inset-x-0 bottom-0 h-2/3" />
       </motion.div>
 
       <div
@@ -224,23 +199,22 @@ export function CloudIntro({ guest }: { guest?: Guest | null }) {
               className="absolute"
               style={{
                 left: `${cloud.left}%`,
-                top: `${cloud.top}%`,
+                bottom: `${cloud.bottom}%`,
                 width: `calc(${cloud.width} * var(--cloud-scale) * 1%)`,
-                aspectRatio: "200 / 110",
+                aspectRatio: cloudAspect(cloud.variant),
               }}
-              // x/y stay put at -50% (centring `left`/`top`) while z
-              // animates; keeping them in the same transform avoids a
-              // plain CSS translate being clobbered by motion.
-              initial={{ x: "-50%", y: "-50%", z: 0, opacity: depth.opacity }}
+              // x stays put at -50% (centring `left`) while z animates;
+              // keeping both in the same transform avoids a plain CSS
+              // translate being clobbered by motion.
+              initial={{ x: "-50%", z: 0, opacity: depth.opacity }}
               animate={
                 transitioning
                   ? {
                       x: "-50%",
-                      y: "-50%",
                       z: depth.z,
                       opacity: [depth.opacity, depth.opacity, 0],
                     }
-                  : { x: "-50%", y: "-50%", z: 0, opacity: depth.opacity }
+                  : { x: "-50%", z: 0, opacity: depth.opacity }
               }
               transition={
                 transitioning
@@ -261,11 +235,13 @@ export function CloudIntro({ guest }: { guest?: Guest | null }) {
                 className="cloud-drift h-full w-full"
                 style={{
                   animationDuration: `${cloud.driftDuration}s`,
-                  animationDelay: `${cloud.driftDelay}s`,
-                  filter: cloud.lighting,
+                  animationDelay: `-${cloud.driftDuration / 3}s`,
+                  filter: cloud.shadow
+                    ? "drop-shadow(0 -9px 13px rgba(140, 98, 165, 0.34))"
+                    : undefined,
                 }}
               >
-                <CloudShape variant={cloud.variant} depth={cloud.depth} />
+                <CloudShape variant={cloud.variant} depth={cloud.depth} flip={cloud.flip} />
               </div>
             </motion.div>
           );
@@ -277,25 +253,30 @@ export function CloudIntro({ guest }: { guest?: Guest | null }) {
         animate={transitioning ? { opacity: 0, scale: 1.5 } : { opacity: 1, scale: 1 }}
         transition={{ duration: transitioning ? 0.7 : 0.4, ease: "easeIn" }}
       >
-        {/* Frosted panel: the copy sits over a cloud field of unknown
-            brightness, so it carries its own backdrop rather than
-            relying on text shadows. The tint stays opaque enough to
-            stand on its own where `backdrop-filter` is unsupported. */}
-        <div className="w-full max-w-sm rounded-3xl border border-gold-400/25 bg-midnight-950/60 px-8 py-10 text-center shadow-[0_24px_60px_-20px_rgba(5,7,15,0.9)] backdrop-blur-md">
-          <p className="text-xs tracking-[0.35em] text-gold-300 uppercase">
+        {/* Barely-there panel: a whisper of tint and just enough blur to
+            take the edge off, so the clouds behind it stay visible — it
+            takes up most of the screen on a phone, and a heavily blurred
+            or solid card there hides more of the art than it's worth.
+            Legibility comes from `.text-halo` on the copy itself rather
+            than from the panel's own opacity or blur, which is what lets
+            both go this low without the text fighting whatever cloud
+            happens to be behind it. */}
+        <div className="w-full max-w-sm rounded-3xl border border-white/40 bg-white/18 px-8 py-10 text-center shadow-[0_20px_50px_-24px_rgba(31,84,147,0.45)] backdrop-blur-[2px]">
+          <p className="text-halo text-xs font-bold tracking-[0.35em] text-blossom-700 uppercase">
             {intro.eyebrow}
           </p>
 
           {greetingName && (
-            <p className="mt-4 text-sm tracking-[0.2em] text-starlight uppercase">
-              Dear {greetingName}
+            <p className="text-halo mt-4 text-sm tracking-[0.2em] text-ink-700 uppercase">
+              Kepada Yth. {greetingName}
             </p>
           )}
 
-          <p className="mt-3 text-sm text-starlight-dim">{intro.subheading}</p>
+          <p className="text-halo mt-3 text-sm font-bold text-ink-500">{intro.subheading}</p>
 
-          <h1 className="mt-2 font-script text-5xl text-starlight sm:text-6xl">
-            {couple.brideName} <span className="text-gold-300">&amp;</span>{" "}
+          <h1 className="text-halo mt-2 font-script text-5xl text-ink-900 sm:text-6xl">
+            {couple.brideName}
+            <span className="block text-blossom-600">&amp;</span>
             {couple.groomName}
           </h1>
 
@@ -306,7 +287,7 @@ export function CloudIntro({ guest }: { guest?: Guest | null }) {
               e.stopPropagation();
               handleEnter();
             }}
-            className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-gold-400 px-8 py-3 text-sm font-medium text-midnight-950 shadow-lg transition hover:bg-gold-300"
+            className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-blossom-700 px-8 py-3 text-sm font-medium text-white shadow-lg transition hover:bg-blossom-600"
           >
             {intro.buttonLabel}
           </button>

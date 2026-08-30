@@ -1,6 +1,10 @@
 "use client";
 
 import { useRef, useSyncExternalStore } from "react";
+import { siteContent } from "@/lib/content";
+import { Container } from "@/components/ui/Container";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Reveal } from "@/components/ui/Reveal";
 
 type TimeLeft = {
   days: number;
@@ -30,8 +34,13 @@ function subscribe(callback: () => void) {
  * that calls setState directly (avoids cascading-render pitfalls) and
  * naturally renders a stable placeholder on the server, filling in
  * once mounted on the client.
+ *
+ * Unit labels (Days/Hours/Minutes/Seconds) are kept in English —
+ * one of the few fixed English spots in an otherwise Indonesian site,
+ * matching the convention on the reference invitation sites surveyed
+ * during planning.
  */
-export function Countdown({ targetISO }: { targetISO: string }) {
+function CountdownDigits({ targetISO }: { targetISO: string }) {
   // useSyncExternalStore requires getSnapshot to return a referentially
   // stable value when nothing has actually changed, so cache the last
   // computed snapshot and only produce a new object once the seconds
@@ -62,8 +71,8 @@ export function Countdown({ targetISO }: { targetISO: string }) {
 
   if (!timeLeft) {
     return (
-      <p className="font-serif-display text-2xl text-gold-300">
-        Today&apos;s the day! 🎉
+      <p className="font-serif-display text-2xl text-starlight">
+        Hari bahagia telah tiba! 🎉
       </p>
     );
   }
@@ -78,19 +87,33 @@ export function Countdown({ targetISO }: { targetISO: string }) {
   return (
     <div
       role="timer"
-      aria-label="Countdown to the wedding"
+      aria-label="Hitung mundur menuju hari pernikahan"
       className="flex justify-center gap-4 sm:gap-8"
     >
       {units.map(([label, value]) => (
         <div key={label} className="flex flex-col items-center">
-          <span className="font-serif-display text-3xl font-semibold tabular-nums text-gold-300 sm:text-4xl">
+          <span className="font-serif-display text-3xl font-semibold tabular-nums text-blossom-700 sm:text-4xl">
             {String(value).padStart(2, "0")}
           </span>
-          <span className="mt-1 text-[10px] tracking-[0.2em] text-starlight-dim uppercase sm:text-xs">
+          <span className="mt-1 text-[10px] tracking-[0.2em] text-ink-500 uppercase sm:text-xs">
             {label}
           </span>
         </div>
       ))}
     </div>
+  );
+}
+
+export function Countdown() {
+  const { weddingDateISO } = siteContent;
+  return (
+    <section id="countdown" className="py-20 sm:py-28">
+      <Container>
+        <SectionHeading eyebrow="Hari Bahagia" title="Menghitung Hari" />
+        <Reveal y={20} delay={0.2} className="mt-12">
+          <CountdownDigits targetISO={weddingDateISO} />
+        </Reveal>
+      </Container>
+    </section>
   );
 }
