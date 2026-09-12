@@ -1,15 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getGuestBySlug, getAllGuestSlugs } from "@/lib/guests";
+import { getGuestBySlug } from "@/lib/guests";
 import { siteContent } from "@/lib/content";
 import { WeddingInvitation } from "@/components/WeddingInvitation";
 
 type Params = { slug: string };
-
-export async function generateStaticParams(): Promise<Params[]> {
-  const slugs = await getAllGuestSlugs();
-  return slugs.map((slug) => ({ slug }));
-}
 
 export async function generateMetadata({
   params,

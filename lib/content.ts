@@ -42,7 +42,7 @@ export const siteContent: SiteContent = {
   events: {
     ceremony: {
       name: "Akad",
-      dateTimeISO: "2026-11-26T08:00:00+07:00",
+      dateTimeISO: "2026-11-26T09:00:00+07:00",
       venueName: "Masjid Namira",
       address: "Lamongan, Jawa Timur",
       mapEmbedUrl: "https://www.google.com/maps?q=-7.1526463,112.4084817&output=embed",
@@ -50,7 +50,7 @@ export const siteContent: SiteContent = {
     },
     reception: {
       name: "Resepsi",
-      dateTimeISO: "2026-11-28T11:00:00+07:00",
+      dateTimeISO: "2026-11-28T10:00:00+07:00",
       venueName: "Gedung Wanita Candra Kencana",
       address: "Surabaya, Jawa Timur",
       mapEmbedUrl: "https://www.google.com/maps?q=-7.2878229,112.7618051&output=embed",
@@ -111,9 +111,9 @@ export const siteContent: SiteContent = {
   ucapan: {
     description:
       "Doa dan ucapan dari Anda sangat berarti bagi kami. Kirimkan lewat pesan singkat berikut.",
-    namePlaceholder: "Nama Anda",
     messagePlaceholder: "Tuliskan ucapan dan doa Anda di sini...",
     submitLabel: "Kirim Ucapan",
+    successMessage: "Terima kasih! Ucapan & doa Anda telah kami terima.",
   },
   seo: {
     title: "Pernikahan Bintang & Mega",

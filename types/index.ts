@@ -88,9 +88,9 @@ export type SiteContent = {
   };
   ucapan: {
     description: string;
-    namePlaceholder: string;
     messagePlaceholder: string;
     submitLabel: string;
+    successMessage: string;
   };
   seo: {
     title: string;

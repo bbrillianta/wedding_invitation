@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum AttendanceStatus {
+  ATTENDING
+  NOT_ATTENDING
+  MAYBE
+}
+
+enum MealPreference {
+  REGULAR
+  VEGETARIAN
+  VEGAN
+  NO_PREFERENCE
+}
+
+model Guest {
+  id                String    @id @default(cuid())
+  slug              String    @unique
+  name              String
+  groupLabel        String?
+  invitedGuestCount Int       @default(1)
+  side              String?
+  isGeneric         Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  viewedAt          DateTime?
+  rsvp              Rsvp?
+}
+
+model Rsvp {
+  id             String            @id @default(cuid())
+  guest          Guest             @relation(fields: [guestId], references: [id])
+  guestId        String            @unique
+  // Nullable: a guest can leave an Ucapan & Doa message before (or without)
+  // ever tapping Hadir/Tidak Hadir on the RSVP bar, so this row may exist
+  // with attendance still unset.
+  attendance     AttendanceStatus?
+  numberOfGuests Int               @default(1)
+  mealPreference MealPreference    @default(NO_PREFERENCE)
+  message        String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+}

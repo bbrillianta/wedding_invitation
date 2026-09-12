@@ -33,11 +33,11 @@ export function ShootingStar() {
         transition={{
           // Quick out of the gate, then visibly easing off rather than
           // the real-meteor accelerate-in most shooting stars use.
-          x: { duration: 1.6, delay: 0.3, ease: "easeOut" },
-          y: { duration: 1.6, delay: 0.3, ease: "easeOut" },
+          x: { duration: 2.8, delay: 0.3, ease: "easeOut" },
+          y: { duration: 2.8, delay: 0.3, ease: "easeOut" },
           // Fades in fast, holds, then a long, slow fade over the back
           // half of the flight instead of cutting off at the tail end.
-          opacity: { duration: 1.6, delay: 0.3, times: [0, 0.08, 0.45, 1] },
+          opacity: { duration: 2.8, delay: 0.3, times: [0, 0.08, 0.45, 1] },
         }}
       >
         <div className="relative h-px w-28 rounded-full bg-gradient-to-r from-transparent to-starlight">

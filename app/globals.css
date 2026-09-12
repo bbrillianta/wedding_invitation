@@ -212,6 +212,27 @@ body {
     0 0 16px rgba(255, 255, 255, 0.6);
 }
 
+/* Thin, blossom-tinted scrollbar for the Ucapan & Doa wall, so a long
+   guest list scrolls inside its own card instead of the browser's bulky
+   default bar breaking the frosted-glass look. */
+.ucapan-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-blossom-400) transparent;
+}
+
+.ucapan-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ucapan-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ucapan-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--color-blossom-400);
+  border-radius: 999px;
+}
+
 @keyframes twinkle {
   0%,
   100% {
