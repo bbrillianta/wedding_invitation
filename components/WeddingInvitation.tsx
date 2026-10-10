@@ -69,7 +69,6 @@ export async function WeddingInvitation({
         {/* <GiftInfo />
         <ConstellationDivider /> */}
         <SiteFooter />
-        <BackgroundMusic />
         <RSVPStickyBar
           slug={guest?.slug}
           name={rsvpName}
@@ -78,6 +77,9 @@ export async function WeddingInvitation({
           maxGuests={maxPartySize(guest)}
         />
       </main>
+      {/* Outside `main`, which is inert while the cover is up: its toggle
+          has to work on the cover too. */}
+      <BackgroundMusic />
     </>
   );
 }

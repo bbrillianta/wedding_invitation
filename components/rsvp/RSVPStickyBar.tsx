@@ -77,17 +77,13 @@ export function RSVPStickyBar({
         const reached = entry.isIntersecting || entry.boundingClientRect.top < 0;
         if (!reached) return;
         setVisible(true);
-        setRsvpBarVisible(true);
         observer.disconnect();
       },
       { threshold: 0 }
     );
 
     observer.observe(sentinel);
-    return () => {
-      observer.disconnect();
-      setRsvpBarVisible(false);
-    };
+    return () => observer.disconnect();
   }, []);
 
   function submit(next: Choice, count: number) {
@@ -115,6 +111,13 @@ export function RSVPStickyBar({
   }
 
   const show = visible && !dismissed;
+
+  // Mirrors the bar's real visibility, including the post-confirm
+  // dismissal, so the music toggle drops back down once the bar is gone.
+  useEffect(() => {
+    setRsvpBarVisible(show);
+    return () => setRsvpBarVisible(false);
+  }, [show]);
   const stepperButton =
     "inline-flex h-11 w-11 items-center justify-center rounded-full border border-blossom-400/60 text-ink-900 transition hover:bg-ink-700/10 disabled:cursor-not-allowed disabled:opacity-40";
 

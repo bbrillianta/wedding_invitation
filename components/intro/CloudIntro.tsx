@@ -1,12 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { MailOpen } from "lucide-react";
 import { siteContent } from "@/lib/content";
-import { formatDate } from "@/lib/utils";
+import { formatDate, withBasePath } from "@/lib/utils";
 import { markIntroDone, resetIntro } from "@/lib/intro-state";
-import { startBackgroundMusic } from "@/lib/audio-state";
+import {
+  enterInvitationMusic,
+  registerAudioElement,
+  retryIntroMusic,
+  startIntroMusic,
+} from "@/lib/audio-state";
 import { CloudShape, cloudAspect } from "@/components/intro/CloudShape";
 import type { CloudDepth, CloudVariant } from "@/components/intro/CloudShape";
 import { SparkleField } from "@/components/layout/SparkleField";
@@ -125,6 +130,33 @@ export function CloudIntro({
   const prefersReducedMotion = useReducedMotion();
   const { intro, couple, weddingDateISO } = siteContent;
   const greetingName = guest?.groupLabel ?? guest?.name ?? guestName;
+  const introAudioRef = useRef<HTMLAudioElement>(null);
+
+  // Cover-only track: tries to start on mount and is cut the instant
+  // "Buka Undangan" is tapped (handleEnter). Most browsers block audible
+  // playback until the page has seen a gesture, so the guest's first tap
+  // on the cover retries it — except taps on the music toggle (which
+  // decides for itself) and on the CTA (which hands over to the
+  // invitation's track instead).
+  useEffect(() => {
+    const el = introAudioRef.current;
+    if (!el) return;
+    const unregister = registerAudioElement("intro", el);
+    startIntroMusic();
+
+    function onFirstGesture(event: Event) {
+      const target = event.target as Element | null;
+      if (target?.closest("[data-music-toggle], .intro-cta")) return;
+      retryIntroMusic();
+    }
+    document.addEventListener("pointerdown", onFirstGesture);
+    document.addEventListener("keydown", onFirstGesture);
+    return () => {
+      document.removeEventListener("pointerdown", onFirstGesture);
+      document.removeEventListener("keydown", onFirstGesture);
+      unregister();
+    };
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = phase === "done" ? "" : "hidden";
@@ -163,11 +195,11 @@ export function CloudIntro({
 
   function handleEnter() {
     if (phase !== "intro") return;
-    // Fired from the click itself, not a later "done" effect: the
-    // ~2s fly-through made the music feel like it lagged the tap, and
-    // starting it here is also what satisfies the browser's per-tab
-    // user-activation requirement for audible autoplay.
-    startBackgroundMusic();
+    // Fired from the click itself, not a later "done" effect: the ~2s
+    // fly-through made the music feel like it lagged the tap, and a
+    // direct call from the gesture is what browsers require for audible
+    // playback. Stays silent if the guest paused the music on the cover.
+    enterInvitationMusic();
     if (prefersReducedMotion) {
       setPhase("done");
       return;
@@ -182,6 +214,8 @@ export function CloudIntro({
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden">
+      <audio ref={introAudioRef} src={withBasePath("/audio/intro-music.mp3")} loop preload="auto" />
+
       {/* Sky clears before the clouds finish, so the last of them streak
           past against the revealed invitation sky. Both skies are cut
           from the same ramp — the intro just sits higher up it — so this
