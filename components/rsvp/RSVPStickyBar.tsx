@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Check, X, Loader2 } from "lucide-react";
+import { Check, X, Loader2, Minus, Plus, ChevronLeft } from "lucide-react";
 import type { AttendanceStatus } from "@prisma/client";
 import { cn } from "@/lib/utils";
 import { setRsvpBarVisible } from "@/lib/rsvp-bar-state";
@@ -21,6 +21,9 @@ type Choice = "ATTENDING" | "NOT_ATTENDING";
  * is preselected to their last answer and labeled "Ingin Mengubah
  * Kehadiran?" instead of "Konfirmasi Kehadiran" once it appears.
  *
+ * "Hadir" opens a guest-count step (skipped when the guest's party size
+ * is capped at 1); "Tidak Hadir" submits straight away.
+ *
  * Either way, a successful confirm hides the bar for the rest of this
  * view — one confirmation per visit — and it only comes back on a later
  * reload, reflecting whatever is now saved.
@@ -29,17 +32,25 @@ export function RSVPStickyBar({
   slug,
   name,
   initialAttendance,
+  initialGuestCount,
+  maxGuests,
 }: {
   slug?: string;
   name?: string;
   initialAttendance: AttendanceStatus | null;
+  initialGuestCount: number;
+  maxGuests: number;
 }) {
   const alreadyAnswered = initialAttendance != null;
-  const [visible, setVisible] = useState(false);
-  const [choice, setChoice] = useState<Choice | null>(
+  const initialChoice: Choice | null =
     initialAttendance === "ATTENDING" || initialAttendance === "NOT_ATTENDING"
       ? initialAttendance
-      : null
+      : null;
+  const [visible, setVisible] = useState(false);
+  const [choice, setChoice] = useState<Choice | null>(initialChoice);
+  const [askingCount, setAskingCount] = useState(false);
+  const [guestCount, setGuestCount] = useState(
+    Math.min(Math.max(1, initialGuestCount), maxGuests)
   );
   const [confirmed, setConfirmed] = useState(false);
   const [dismissed, setDismissed] = useState(false);
@@ -79,12 +90,12 @@ export function RSVPStickyBar({
     };
   }, []);
 
-  function handleChoice(next: Choice) {
+  function submit(next: Choice, count: number) {
     if (!name || isPending || confirmed) return;
     setChoice(next);
     setError(null);
     startTransition(async () => {
-      const result = await submitAttendance(slug, name, next);
+      const result = await submitAttendance(slug, name, next, count);
       if (result.status === "success") {
         setConfirmed(true);
       } else {
@@ -93,7 +104,19 @@ export function RSVPStickyBar({
     });
   }
 
+  function handleAttending() {
+    if (maxGuests <= 1) {
+      submit("ATTENDING", 1);
+      return;
+    }
+    setChoice("ATTENDING");
+    setError(null);
+    setAskingCount(true);
+  }
+
   const show = visible && !dismissed;
+  const stepperButton =
+    "inline-flex h-11 w-11 items-center justify-center rounded-full border border-blossom-400/60 text-ink-900 transition hover:bg-ink-700/10 disabled:cursor-not-allowed disabled:opacity-40";
 
   return (
     <AnimatePresence>
@@ -113,6 +136,73 @@ export function RSVPStickyBar({
                 <Check className="h-4 w-4 shrink-0 text-blossom-700" />
                 Terima kasih telah mengonfirmasi kehadiran Anda.
               </p>
+            ) : askingCount ? (
+              // Same height as the Hadir/Tidak Hadir step: BackgroundMusic
+              // lifts its toggle by a fixed offset while this bar is up.
+              <>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setChoice(initialChoice);
+                      setAskingCount(false);
+                    }}
+                    disabled={isPending}
+                    className="absolute top-1/2 left-0 inline-flex -translate-y-1/2 items-center gap-0.5 text-xs text-ink-500 transition hover:text-ink-900 disabled:opacity-50"
+                  >
+                    <ChevronLeft className="h-3.5 w-3.5" />
+                    Kembali
+                  </button>
+                  <p
+                    id="rsvp-guest-count-label"
+                    className="text-center text-xs font-medium tracking-[0.15em] text-ink-700 uppercase"
+                  >
+                    Jumlah Tamu
+                  </p>
+                </div>
+                <div className="mt-2 grid grid-cols-2 gap-3">
+                  <div
+                    role="group"
+                    aria-labelledby="rsvp-guest-count-label"
+                    className="flex items-center justify-between"
+                  >
+                    <button
+                      type="button"
+                      onClick={() => setGuestCount((n) => Math.max(1, n - 1))}
+                      disabled={isPending || guestCount <= 1}
+                      aria-label="Kurangi jumlah tamu"
+                      className={stepperButton}
+                    >
+                      <Minus className="h-4 w-4" />
+                    </button>
+                    <p aria-live="polite" className="font-serif-display text-xl font-medium text-ink-900">
+                      {guestCount}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => setGuestCount((n) => Math.min(maxGuests, n + 1))}
+                      disabled={isPending || guestCount >= maxGuests}
+                      aria-label="Tambah jumlah tamu"
+                      className={stepperButton}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => submit("ATTENDING", guestCount)}
+                    disabled={isPending}
+                    className="inline-flex items-center justify-center gap-2 rounded-full bg-blossom-700 px-4 py-3 text-sm font-medium text-white transition hover:bg-blossom-600 disabled:cursor-not-allowed disabled:opacity-70"
+                  >
+                    {isPending ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Check className="h-4 w-4" />
+                    )}
+                    Konfirmasi
+                  </button>
+                </div>
+              </>
             ) : (
               <>
                 <p className="text-center text-xs font-medium tracking-[0.15em] text-ink-700 uppercase">
@@ -123,7 +213,7 @@ export function RSVPStickyBar({
                 <div className="mt-2 grid grid-cols-2 gap-3">
                   <button
                     type="button"
-                    onClick={() => handleChoice("ATTENDING")}
+                    onClick={handleAttending}
                     disabled={isPending}
                     aria-pressed={choice === "ATTENDING"}
                     className={cn(
@@ -142,7 +232,7 @@ export function RSVPStickyBar({
                   </button>
                   <button
                     type="button"
-                    onClick={() => handleChoice("NOT_ATTENDING")}
+                    onClick={() => submit("NOT_ATTENDING", guestCount)}
                     disabled={isPending}
                     aria-pressed={choice === "NOT_ATTENDING"}
                     className={cn(
@@ -160,12 +250,12 @@ export function RSVPStickyBar({
                     Tidak Hadir
                   </button>
                 </div>
-                {error && (
-                  <p role="alert" className="mt-2 text-center text-xs text-red-600">
-                    {error}
-                  </p>
-                )}
               </>
+            )}
+            {error && !confirmed && (
+              <p role="alert" className="mt-2 text-center text-xs text-red-600">
+                {error}
+              </p>
             )}
           </div>
         </motion.div>

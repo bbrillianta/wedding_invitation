@@ -12,7 +12,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { CloudIntro } from "@/components/intro/CloudIntro";
 import { BackgroundMusic } from "@/components/audio/BackgroundMusic";
 import { RSVPStickyBar } from "@/components/rsvp/RSVPStickyBar";
-import { getAttendance, genericGuestSlug } from "@/lib/guests";
+import { getSavedRsvp, genericGuestSlug, maxPartySize } from "@/lib/guests";
 import type { Guest } from "@/types";
 
 /**
@@ -28,8 +28,8 @@ export async function WeddingInvitation({
   /** From the "/" route's `?name=` link — see app/page.tsx. */
   guestName?: string;
 }) {
-  // Read-only lookup: does this guest already have a saved attendance?
-  // Uses the same deterministic slug the write side (resolveGuestId in
+  // Read-only lookup: does this guest already have a saved RSVP?
+  // Uses the same deterministic slug the write side (resolveGuest in
   // app/rsvp/actions.ts) would upsert into for a generic guest, so a
   // returning visit checks the row it would land on. This is *only* for
   // checking existing state, though — RSVPStickyBar itself still gets
@@ -42,8 +42,8 @@ export async function WeddingInvitation({
   const attendanceLookupSlug =
     guest?.slug ?? (guestName ? genericGuestSlug(guestName) : undefined);
   const rsvpName = guest?.name ?? guestName;
-  const attendance = attendanceLookupSlug
-    ? await getAttendance(attendanceLookupSlug)
+  const savedRsvp = attendanceLookupSlug
+    ? await getSavedRsvp(attendanceLookupSlug)
     : null;
 
   return (
@@ -73,7 +73,9 @@ export async function WeddingInvitation({
         <RSVPStickyBar
           slug={guest?.slug}
           name={rsvpName}
-          initialAttendance={attendance}
+          initialAttendance={savedRsvp?.attendance ?? null}
+          initialGuestCount={savedRsvp?.numberOfGuests ?? 1}
+          maxGuests={maxPartySize(guest)}
         />
       </main>
     </>

@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { ucapanSchema } from "@/lib/validations/rsvp";
-import { genericGuestSlug } from "@/lib/guests";
+import { genericGuestSlug, maxPartySize } from "@/lib/guests";
 
 export type UcapanState = {
   status: "idle" | "success" | "error";
@@ -27,16 +27,12 @@ type AttendanceChoice = (typeof ATTENDANCE_CHOICES)[number];
  * what lets a returning guest's saved RSVP/Ucapan be found again on
  * reload instead of every visit spawning a fresh anonymous row.
  */
-async function resolveGuestId(
-  slug: string | undefined,
-  name: string
-): Promise<string | null> {
+async function resolveGuest(slug: string | undefined, name: string) {
   if (slug) {
-    const guest = await prisma.guest.findUnique({ where: { slug } });
-    return guest?.id ?? null;
+    return prisma.guest.findUnique({ where: { slug } });
   }
 
-  const guest = await prisma.guest.upsert({
+  return prisma.guest.upsert({
     where: { slug: genericGuestSlug(name) },
     update: {},
     create: {
@@ -49,7 +45,6 @@ async function resolveGuestId(
       invitedGuestCount: 1,
     },
   });
-  return guest.id;
 }
 
 /**
@@ -84,10 +79,11 @@ export async function submitUcapan(
   const { name, message } = parsed.data;
 
   try {
-    const guestId = await resolveGuestId(slug, name);
-    if (!guestId) {
+    const guest = await resolveGuest(slug, name);
+    if (!guest) {
       return { status: "error", message: "Tamu tidak ditemukan." };
     }
+    const guestId = guest.id;
 
     // A guest can send more than one Ucapan & Doa, so each submission is
     // its own row rather than overwriting a singleton message.
@@ -127,7 +123,8 @@ export async function submitUcapan(
 export async function submitAttendance(
   slug: string | undefined,
   name: string,
-  attendance: AttendanceChoice
+  attendance: AttendanceChoice,
+  numberOfGuests = 1
 ): Promise<AttendanceState> {
   // The UI only ever sends one of these two values, but this function is
   // a public RPC endpoint once deployed — anyone can POST to it directly,
@@ -142,15 +139,26 @@ export async function submitAttendance(
   }
 
   try {
-    const guestId = await resolveGuestId(slug, trimmedName);
-    if (!guestId) {
+    const guest = await resolveGuest(slug, trimmedName);
+    if (!guest) {
       return { status: "error", message: "Tamu tidak ditemukan." };
     }
 
+    // Party size only matters for a "Hadir"; a "Tidak Hadir" leaves the
+    // last saved count alone rather than overwriting it.
+    let data: { attendance: AttendanceChoice; numberOfGuests?: number } = { attendance };
+    if (attendance === "ATTENDING") {
+      const max = maxPartySize(guest);
+      if (!Number.isInteger(numberOfGuests) || numberOfGuests < 1 || numberOfGuests > max) {
+        return { status: "error", message: `Jumlah tamu harus antara 1 dan ${max}.` };
+      }
+      data = { attendance, numberOfGuests };
+    }
+
     await prisma.rsvp.upsert({
-      where: { guestId },
-      update: { attendance },
-      create: { guestId, attendance },
+      where: { guestId: guest.id },
+      update: data,
+      create: { guestId: guest.id, ...data },
     });
 
     try {

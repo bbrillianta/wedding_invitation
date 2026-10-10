@@ -38,16 +38,27 @@ export function genericGuestSlug(name: string): string {
   return slugify(name) || "tamu";
 }
 
+// A `?name=` link isn't tied to a seeded party size, so it gets a fixed cap.
+export const GENERIC_MAX_PARTY_SIZE = 5;
+
+export function maxPartySize(guest: { isGeneric?: boolean; invitedGuestCount: number } | null | undefined): number {
+  if (!guest || guest.isGeneric) return GENERIC_MAX_PARTY_SIZE;
+  return Math.max(1, guest.invitedGuestCount);
+}
+
+export type SavedRsvp = {
+  attendance: AttendanceStatus | null;
+  numberOfGuests: number;
+};
+
 /**
- * A guest's saved attendance, or null if they haven't confirmed yet (or
- * don't exist in the DB at all — a fresh generic slug nobody has
- * submitted under). Read-only: unlike the server actions, this never
- * creates a row, since a page view alone shouldn't write to the DB.
+ * A guest's saved RSVP, or null if they have no row yet. Read-only: unlike
+ * the server actions, this never creates a row, since a page view alone
+ * shouldn't write to the DB.
  */
-export async function getAttendance(slug: string): Promise<AttendanceStatus | null> {
-  const rsvp = await prisma.rsvp.findFirst({
+export async function getSavedRsvp(slug: string): Promise<SavedRsvp | null> {
+  return prisma.rsvp.findFirst({
     where: { guest: { slug } },
-    select: { attendance: true },
+    select: { attendance: true, numberOfGuests: true },
   });
-  return rsvp?.attendance ?? null;
 }

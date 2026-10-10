@@ -12,13 +12,6 @@ enum AttendanceStatus {
   MAYBE
 }
 
-enum MealPreference {
-  REGULAR
-  VEGETARIAN
-  VEGAN
-  NO_PREFERENCE
-}
-
 model Guest {
   id                String          @id @default(cuid())
   slug              String          @unique
@@ -43,7 +36,6 @@ model Rsvp {
   // with attendance still unset.
   attendance     AttendanceStatus?
   numberOfGuests Int               @default(1)
-  mealPreference MealPreference    @default(NO_PREFERENCE)
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
 }

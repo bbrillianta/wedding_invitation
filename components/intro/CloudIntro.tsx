@@ -155,18 +155,19 @@ export function CloudIntro({
   // Releasing the reveals is tied to the phase rather than fired inline
   // from handleEnter, so the reduced-motion path (which jumps straight
   // to "done") and the animated path both hand over at the same moment.
-  // Music starts here too — the intro sky is fully gone by "done", so
-  // sound and sight change over together instead of audio leading the
-  // reveal.
   useEffect(() => {
     if (phase === "done") {
       markIntroDone();
-      startBackgroundMusic();
     }
   }, [phase]);
 
   function handleEnter() {
     if (phase !== "intro") return;
+    // Fired from the click itself, not a later "done" effect: the
+    // ~2s fly-through made the music feel like it lagged the tap, and
+    // starting it here is also what satisfies the browser's per-tab
+    // user-activation requirement for audible autoplay.
+    startBackgroundMusic();
     if (prefersReducedMotion) {
       setPhase("done");
       return;

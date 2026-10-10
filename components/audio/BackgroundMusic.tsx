@@ -32,7 +32,7 @@ export function BackgroundMusic() {
 
   return (
     <>
-      <audio ref={audioRef} src={withBasePath("/audio/night-theme.mp3")} loop preload="none" />
+      <audio ref={audioRef} src={withBasePath("/audio/background-music.mp3")} loop preload="none" />
       <button
         type="button"
         onClick={toggleBackgroundMusic}
