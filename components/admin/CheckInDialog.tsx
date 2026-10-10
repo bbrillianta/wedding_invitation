@@ -70,8 +70,8 @@ function ArrivalForm({
   onCancel: () => void;
 }) {
   // Start from what the guest told us: their RSVP count if they said Hadir,
-  // otherwise the size of their invitation.
-  const expected = guest.attendance === "ATTENDING" ? (guest.numberOfGuests ?? 1) : guest.invitedGuestCount;
+  // otherwise 1.
+  const expected = guest.attendance === "ATTENDING" ? (guest.numberOfGuests ?? 1) : 1;
   // Kept as text so the usher can clear the field and type a new number;
   // `count` is only set while the text is a whole number in range.
   const justFocused = useRef(false);

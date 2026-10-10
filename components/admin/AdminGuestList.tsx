@@ -179,7 +179,6 @@ export function AdminGuestList({ guests }: { guests: AdminGuest[] }) {
                 {guest.side && <p className="truncate text-xs text-ink-500">{guest.side}</p>}
                 <p className="mt-1 flex flex-wrap items-center gap-1.5 text-xs">
                   <span className={`rounded-full px-2 py-0.5 ${label.className}`}>{label.text}</span>
-                  <span className="text-ink-500">Diundang {guest.invitedGuestCount} orang</span>
                   {arrival.checkedInAt && arrival.arrivedGuestCount !== null && (
                     <span className="font-medium text-emerald-800">Datang {arrival.arrivedGuestCount} orang</span>
                   )}

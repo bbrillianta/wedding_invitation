@@ -7,7 +7,7 @@ import { PrismaLibSql } from "@prisma/adapter-libsql";
  * Imports the couple's guest list from a CSV (default data/guests.csv,
  * gitignored because the codes in it are the invitation links).
  *
- * Columns: code, name, side, groupLabel, invitedGuestCount, link. Only name
+ * Columns: code, name, side, groupLabel, link. Only name
  * is required. A row without a code gets a new one, written back into the
  * file *before* the database is touched, so re-running never duplicates a
  * guest. Rows are matched by code, never by name, since names repeat.
@@ -25,7 +25,7 @@ try {
 
 const CSV_PATH = process.argv[2] ?? "data/guests.csv";
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://wedding-invitation-psi-tawny.vercel.app").replace(/\/$/, "");
-const COLUMNS = ["code", "name", "side", "groupLabel", "invitedGuestCount", "link"];
+const COLUMNS = ["code", "name", "side", "groupLabel", "link"];
 // No 0/o, 1/i/l: codes may be read aloud or retyped from a screenshot.
 const CODE_ALPHABET = "23456789abcdefghjkmnpqrstuvwxyz";
 const CODE_LENGTH = 8;
@@ -110,9 +110,6 @@ async function main() {
   rows.forEach((row, i) => {
     const line = i + 2;
     if (!row.name) problems.push(`line ${line}: name is empty`);
-    if (row.invitedGuestCount && !/^[1-9]\d*$/.test(row.invitedGuestCount)) {
-      problems.push(`line ${line}: invitedGuestCount "${row.invitedGuestCount}" isn't a whole number from 1`);
-    }
     if (row.code) {
       if (seen.has(row.code)) problems.push(`line ${line}: code ${row.code} appears twice`);
       seen.add(row.code);
@@ -142,7 +139,6 @@ async function main() {
       name: row.name,
       side: row.side || null,
       groupLabel: row.groupLabel || null,
-      invitedGuestCount: row.invitedGuestCount ? Number(row.invitedGuestCount) : 1,
     };
     await prisma.guest.upsert({ where: { code: row.code }, update: data, create: { code: row.code, ...data } });
   }

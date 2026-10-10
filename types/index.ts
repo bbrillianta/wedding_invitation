@@ -104,5 +104,4 @@ export type Guest = {
   code: string;
   name: string;
   groupLabel?: string;
-  invitedGuestCount: number;
 };

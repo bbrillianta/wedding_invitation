@@ -12,7 +12,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { CloudIntro } from "@/components/intro/CloudIntro";
 import { BackgroundMusic } from "@/components/audio/BackgroundMusic";
 import { RSVPStickyBar } from "@/components/rsvp/RSVPStickyBar";
-import { getSavedRsvp, maxPartySize } from "@/lib/guests";
+import { getSavedRsvp, MAX_PARTY_SIZE } from "@/lib/guests";
 import type { Guest } from "@/types";
 
 /** The invitation itself, for a guest found by their link's code. */
@@ -46,7 +46,7 @@ export async function WeddingInvitation({ guest }: { guest: Guest }) {
           code={guest.code}
           initialAttendance={savedRsvp?.attendance ?? null}
           initialGuestCount={savedRsvp?.numberOfGuests ?? 1}
-          maxGuests={maxPartySize(guest)}
+          maxGuests={MAX_PARTY_SIZE}
         />
       </main>
       {/* Outside `main`, which is inert while the cover is up: its toggle

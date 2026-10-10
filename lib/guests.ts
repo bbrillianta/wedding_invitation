@@ -18,13 +18,12 @@ export async function getGuestByCode(code: string | undefined): Promise<Guest | 
     code: guest.code,
     name: guest.name,
     groupLabel: guest.groupLabel ?? undefined,
-    invitedGuestCount: guest.invitedGuestCount,
   };
 }
 
-export function maxPartySize(guest: { invitedGuestCount: number }): number {
-  return Math.max(1, guest.invitedGuestCount);
-}
+// How many people any guest can confirm on the RSVP bar. The same for
+// everyone: the guest list has no per-invitation party size.
+export const MAX_PARTY_SIZE = 5;
 
 export type SavedRsvp = {
   attendance: AttendanceStatus | null;

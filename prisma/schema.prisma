@@ -26,7 +26,6 @@ model Guest {
   name              String
   // Shown instead of name on the cover greeting, e.g. "Keluarga Budi".
   groupLabel        String?
-  invitedGuestCount Int             @default(1)
   // Which list the guest came from, e.g. "Teman Mega · Kuliah". Only shown
   // in /admin, to tell guests with the same name apart.
   side              String?

@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { ucapanSchema } from "@/lib/validations/rsvp";
-import { maxPartySize } from "@/lib/guests";
+import { MAX_PARTY_SIZE } from "@/lib/guests";
 
 export type UcapanState = {
   status: "idle" | "success" | "error";
@@ -121,9 +121,8 @@ export async function submitAttendance(
     // last saved count alone rather than overwriting it.
     let data: { attendance: AttendanceChoice; numberOfGuests?: number } = { attendance };
     if (attendance === "ATTENDING") {
-      const max = maxPartySize(guest);
-      if (!Number.isInteger(numberOfGuests) || numberOfGuests < 1 || numberOfGuests > max) {
-        return { status: "error", message: `Jumlah tamu harus antara 1 dan ${max}.` };
+      if (!Number.isInteger(numberOfGuests) || numberOfGuests < 1 || numberOfGuests > MAX_PARTY_SIZE) {
+        return { status: "error", message: `Jumlah tamu harus antara 1 dan ${MAX_PARTY_SIZE}.` };
       }
       data = { attendance, numberOfGuests };
     }
