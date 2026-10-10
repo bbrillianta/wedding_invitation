@@ -12,6 +12,12 @@ enum AttendanceStatus {
   MAYBE
 }
 
+// How a guest got to the venue, recorded by an usher at check-in for parking.
+enum Vehicle {
+  MOTORCYCLE
+  CAR
+}
+
 model Guest {
   id                String          @id @default(cuid())
   slug              String          @unique
@@ -23,6 +29,12 @@ model Guest {
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   viewedAt          DateTime?
+  // Set by an usher on the wedding day from /admin; null until the guest arrives.
+  checkedInAt       DateTime?
+  vehicle           Vehicle?
+  // How many people actually came, counted by the usher at check-in. Kept
+  // apart from Rsvp.numberOfGuests, which is what the guest said beforehand.
+  arrivedGuestCount Int?
   rsvp              Rsvp?
   ucapanMessages    UcapanMessage[]
 }
