@@ -4,7 +4,7 @@ A wedding invitation site built with Next.js (App Router, TypeScript, Tailwind C
 
 ## Status: Phase 1 (static)
 
-This is currently a **static site with no backend** — deployable anywhere that serves static files, including GitHub Pages. There is no RSVP database yet; the RSVP section links out to WhatsApp/phone/email instead of a form. Guest-specific invite links (`/invite/<slug>`) are pre-rendered at build time from a static list in [`lib/guests-data.ts`](lib/guests-data.ts).
+This is currently a **static site with no backend** — deployable anywhere that serves static files, including GitHub Pages. There is no RSVP database yet; the RSVP section links out to WhatsApp/phone/email instead of a form. Each invitation link is `/?id=<code>`, for a guest imported from `data/guests.csv` by [`prisma/seed.ts`](prisma/seed.ts).
 
 Phase 2 (a database-backed RSVP form) will remove static export and require a Node-capable host — see the plan for details.
 
@@ -15,7 +15,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Try a personalized invite at `/invite/keluarga-budi` (see [`lib/guests-data.ts`](lib/guests-data.ts) for all seeded slugs).
+Open [http://localhost:3000](http://localhost:3000). Open an invitation with any guest's `/?id=<code>` from `data/guests.csv` (import it with `node --env-file=.env ./node_modules/.bin/tsx prisma/seed.ts`).
 
 ## Editing content
 

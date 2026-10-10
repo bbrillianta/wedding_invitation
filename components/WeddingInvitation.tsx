@@ -12,43 +12,16 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { CloudIntro } from "@/components/intro/CloudIntro";
 import { BackgroundMusic } from "@/components/audio/BackgroundMusic";
 import { RSVPStickyBar } from "@/components/rsvp/RSVPStickyBar";
-import { getSavedRsvp, genericGuestSlug, maxPartySize } from "@/lib/guests";
+import { getSavedRsvp, maxPartySize } from "@/lib/guests";
 import type { Guest } from "@/types";
 
-/**
- * Shared page body rendered by both "/" (generic) and "/invite/[slug]"
- * (personalized) — the only difference between the two routes is
- * whether a Guest is passed down.
- */
-export async function WeddingInvitation({
-  guest,
-  guestName,
-}: {
-  guest?: Guest | null;
-  /** From the "/" route's `?name=` link — see app/page.tsx. */
-  guestName?: string;
-}) {
-  // Read-only lookup: does this guest already have a saved RSVP?
-  // Uses the same deterministic slug the write side (resolveGuest in
-  // app/rsvp/actions.ts) would upsert into for a generic guest, so a
-  // returning visit checks the row it would land on. This is *only* for
-  // checking existing state, though — RSVPStickyBar itself still gets
-  // the real `guest?.slug` below (undefined for a generic guest), not
-  // this computed one, because `slug` also tells submitAttendance
-  // whether to require an existing guest (personalized) or upsert-create
-  // one (generic). Passing the computed slug there instead would make a
-  // first-time generic guest's confirm look like a lookup for a guest
-  // that doesn't exist yet, and fail instead of inserting.
-  const attendanceLookupSlug =
-    guest?.slug ?? (guestName ? genericGuestSlug(guestName) : undefined);
-  const rsvpName = guest?.name ?? guestName;
-  const savedRsvp = attendanceLookupSlug
-    ? await getSavedRsvp(attendanceLookupSlug)
-    : null;
+/** The invitation itself, for a guest found by their link's code. */
+export async function WeddingInvitation({ guest }: { guest: Guest }) {
+  const savedRsvp = await getSavedRsvp(guest.code);
 
   return (
     <>
-      <CloudIntro guest={guest} guestName={guestName} />
+      <CloudIntro guest={guest} />
       <main id="invitation-content">
         <Hero />
         <ConstellationDivider />
@@ -64,14 +37,13 @@ export async function WeddingInvitation({
         <ConstellationDivider />
         {/* <Gallery />
         <ConstellationDivider /> */}
-        <UcapanSection guest={guest} guestName={guestName} />
+        <UcapanSection guest={guest} />
         <ConstellationDivider />
         {/* <GiftInfo />
         <ConstellationDivider /> */}
         <SiteFooter />
         <RSVPStickyBar
-          slug={guest?.slug}
-          name={rsvpName}
+          code={guest.code}
           initialAttendance={savedRsvp?.attendance ?? null}
           initialGuestCount={savedRsvp?.numberOfGuests ?? 1}
           maxGuests={maxPartySize(guest)}

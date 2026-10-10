@@ -118,18 +118,11 @@ const CLOUDS: Cloud[] = [
   { left: 132, bottom: -16, width: 40, depth: "front", variant: 4, driftDuration: 114, shadow: true, flip: true },
 ];
 
-export function CloudIntro({
-  guest,
-  guestName,
-}: {
-  guest?: Guest | null;
-  /** From the "/" route's `?name=` link — see app/page.tsx. */
-  guestName?: string;
-}) {
+export function CloudIntro({ guest }: { guest: Guest }) {
   const [phase, setPhase] = useState<Phase>("intro");
   const prefersReducedMotion = useReducedMotion();
   const { intro, couple, weddingDateISO } = siteContent;
-  const greetingName = guest?.groupLabel ?? guest?.name ?? guestName;
+  const greetingName = guest.groupLabel ?? guest.name;
   const introAudioRef = useRef<HTMLAudioElement>(null);
 
   // Cover-only track: tries to start on mount and is cut the instant

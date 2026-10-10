@@ -8,17 +8,9 @@ import type { Guest } from "@/types";
 
 const initialState: UcapanState = { status: "idle" };
 
-export function UcapanDoa({
-  guest,
-  guestName,
-}: {
-  guest?: Guest | null;
-  /** From the `?name=` link for a visitor with no DB-backed `guest`. */
-  guestName?: string;
-}) {
+export function UcapanDoa({ guest }: { guest: Guest }) {
   const { ucapan } = siteContent;
-  const senderName = guest?.name ?? guestName ?? "";
-  const submitForGuest = submitUcapan.bind(null, guest?.slug);
+  const submitForGuest = submitUcapan.bind(null, guest.code);
   const [state, formAction, isPending] = useActionState(
     submitForGuest,
     initialState
@@ -43,15 +35,8 @@ export function UcapanDoa({
     >
       <p className="text-center text-sm text-ink-500">{ucapan.description}</p>
       <p className="text-center text-xs text-ink-500">
-        Mengirim sebagai <span className="font-medium text-ink-700">{senderName}</span>
+        Mengirim sebagai <span className="font-medium text-ink-700">{guest.name}</span>
       </p>
-
-      {/* The sender's name comes from the guest link (DB-backed slug or
-          the `?name=` query param — both are required to reach this
-          form at all, see app/page.tsx), not a free-text field, so it
-          travels to submitUcapan as a hidden input instead of visible,
-          editable UI. */}
-      <input type="hidden" name="name" value={senderName} />
 
       <div>
         <label

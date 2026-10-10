@@ -7,10 +7,10 @@ import { prisma } from "@/lib/prisma";
  */
 export type AdminGuest = {
   id: string;
-  slug: string;
+  code: string;
   name: string;
   groupLabel: string | null;
-  isGeneric: boolean;
+  side: string | null;
   invitedGuestCount: number;
   attendance: AttendanceStatus | null;
   numberOfGuests: number | null;
@@ -27,10 +27,10 @@ export async function getAdminGuests(): Promise<AdminGuest[]> {
 
   return guests.map((guest) => ({
     id: guest.id,
-    slug: guest.slug,
+    code: guest.code,
     name: guest.name,
     groupLabel: guest.groupLabel,
-    isGeneric: guest.isGeneric,
+    side: guest.side,
     invitedGuestCount: guest.invitedGuestCount,
     attendance: guest.rsvp?.attendance ?? null,
     numberOfGuests: guest.rsvp?.numberOfGuests ?? null,

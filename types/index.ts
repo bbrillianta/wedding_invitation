@@ -99,9 +99,9 @@ export type SiteContent = {
   };
 };
 
-/** Guest record shape shared between the Phase 1 static list and the Phase 2 database. */
+/** A guest as the invitation page sees them (see lib/guests.ts). */
 export type Guest = {
-  slug: string;
+  code: string;
   name: string;
   groupLabel?: string;
   invitedGuestCount: number;

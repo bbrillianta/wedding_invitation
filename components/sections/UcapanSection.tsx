@@ -6,13 +6,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { getUcapanMessages } from "@/lib/ucapan";
 import type { Guest } from "@/types";
 
-export async function UcapanSection({
-  guest,
-  guestName,
-}: {
-  guest?: Guest | null;
-  guestName?: string;
-}) {
+export async function UcapanSection({ guest }: { guest: Guest }) {
   const messages = await getUcapanMessages();
 
   return (
@@ -20,7 +14,7 @@ export async function UcapanSection({
       <Container>
         <SectionHeading eyebrow="Doa & Restu" title="Ucapan & Doa" />
         <Reveal className="mt-10" delay={0.2}>
-          <UcapanDoa guest={guest} guestName={guestName} />
+          <UcapanDoa guest={guest} />
         </Reveal>
         <Reveal className="mt-8" delay={0.3}>
           <UcapanWall messages={messages} />

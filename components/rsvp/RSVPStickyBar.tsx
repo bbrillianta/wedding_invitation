@@ -29,14 +29,12 @@ type Choice = "ATTENDING" | "NOT_ATTENDING";
  * reload, reflecting whatever is now saved.
  */
 export function RSVPStickyBar({
-  slug,
-  name,
+  code,
   initialAttendance,
   initialGuestCount,
   maxGuests,
 }: {
-  slug?: string;
-  name?: string;
+  code: string;
   initialAttendance: AttendanceStatus | null;
   initialGuestCount: number;
   maxGuests: number;
@@ -87,11 +85,11 @@ export function RSVPStickyBar({
   }, []);
 
   function submit(next: Choice, count: number) {
-    if (!name || isPending || confirmed) return;
+    if (isPending || confirmed) return;
     setChoice(next);
     setError(null);
     startTransition(async () => {
-      const result = await submitAttendance(slug, name, next, count);
+      const result = await submitAttendance(code, next, count);
       if (result.status === "success") {
         setConfirmed(true);
       } else {

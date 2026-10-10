@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const ucapanSchema = z.object({
-  name: z.string().trim().min(1, "Nama wajib diisi.").max(100, "Nama terlalu panjang."),
   message: z
     .string()
     .trim()

@@ -20,12 +20,16 @@ enum Vehicle {
 
 model Guest {
   id                String          @id @default(cuid())
-  slug              String          @unique
+  // The guest's invitation link is /?id=<code>. Random, so links can't be
+  // guessed or walked; assigned once by prisma/seed.ts and never changed.
+  code              String          @unique
   name              String
+  // Shown instead of name on the cover greeting, e.g. "Keluarga Budi".
   groupLabel        String?
   invitedGuestCount Int             @default(1)
+  // Which list the guest came from, e.g. "Teman Mega · Kuliah". Only shown
+  // in /admin, to tell guests with the same name apart.
   side              String?
-  isGeneric         Boolean         @default(false)
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   viewedAt          DateTime?
