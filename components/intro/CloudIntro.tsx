@@ -23,6 +23,13 @@ type Phase = "intro" | "transitioning" | "done";
 /**
  * The fly-through is real 3D perspective, not a flat scale-up: clouds
  * sit at z=0 at rest and animate toward the camera along the z-axis.
+ *
+ * It runs as CSS keyframe animations (`.intro-cloud--*` in globals.css),
+ * not framer-motion: motion drives an independent `z` from JavaScript on
+ * every frame, and on a slow phone that main-thread work is exactly what
+ * made the flight stutter. CSS transform/opacity animations run on the
+ * compositor thread instead, so a busy main thread (music starting, the
+ * invitation behind getting ready) can't drop their frames.
  * With `perspective: PERSPECTIVE` on the field, that makes each cloud
  * expand *and* sweep outward from the vanishing point at a rate set by
  * its own depth — which is what sells "flying through" rather than
@@ -34,19 +41,13 @@ type Phase = "intro" | "transitioning" | "done";
  */
 const PERSPECTIVE = 1000;
 
-const DEPTH: Record<
-  CloudDepth,
-  { z: number; duration: number; delay: number; opacity: number }
-> = {
-  // z 550 -> ~2.2x, the distant layer barely moves: parallax anchor.
-  // Its lower opacity is the other half of the aerial perspective the
-  // washed-out `back` gradient already starts.
-  back: { z: 550, duration: 1.9, delay: 0.12, opacity: 0.72 },
-  // z 820 -> ~5x
-  mid: { z: 820, duration: 1.6, delay: 0.06, opacity: 0.93 },
-  // z 935 -> ~15x, the near layer tears past the camera first.
-  front: { z: 935, duration: 1.35, delay: 0, opacity: 1 },
-};
+// Per depth band, the fly-through's distance and timing live in the
+// `.intro-cloud--back/mid/front` rules in globals.css:
+//   back:  z 550 (~2.2x), 1.9s from 0.12s, resting opacity 0.72. The
+//          distant layer barely moves: the parallax anchor.
+//   mid:   z 820 (~5x),   1.6s from 0.06s, resting opacity 0.93.
+//   front: z 935 (~15x),  1.35s from 0s, the near layer tears past first.
+// Each fades out over the last 38% of its own flight.
 
 const TRANSITION_MS = 2050;
 
@@ -206,7 +207,8 @@ export function CloudIntro({ guest }: { guest: Guest }) {
   const transitioning = phase === "transitioning";
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden">
+    // `intro-flying` starts every part of the flight in globals.css.
+    <div className={`fixed inset-0 z-50 overflow-hidden${transitioning ? " intro-flying" : ""}`}>
       <audio ref={introAudioRef} src={withBasePath("/audio/intro-music.mp3")} loop preload="auto" />
 
       {/* Sky clears before the clouds finish, so the last of them streak
@@ -214,87 +216,50 @@ export function CloudIntro({ guest }: { guest: Guest }) {
           from the same ramp — the intro just sits higher up it — so this
           reads as dropping out of the blue toward the horizon rather
           than as a cut to a different scene. */}
-      <motion.div
-        className="dawn-sky absolute inset-0"
-        aria-hidden="true"
-        animate={{ opacity: transitioning ? 0 : 1 }}
-        transition={{ duration: 1, delay: transitioning ? 0.45 : 0 }}
-      >
+      <div className="dawn-sky intro-sky absolute inset-0" aria-hidden="true">
         {/* Sparkles in the deep band overhead — the same field that
             waits on the invitation sky underneath, in white while the
             sky behind them is still dark enough to carry it. */}
         <SparkleField className="dawn-sparkles text-starlight sparkle-glow" />
         {/* The light source the clouds are lit by. */}
         <div className="dawn-glow absolute inset-x-0 bottom-0 h-2/3" />
-      </motion.div>
+      </div>
 
       <div
         className="cloud-field absolute inset-0"
         aria-hidden="true"
         style={{ perspective: PERSPECTIVE, perspectiveOrigin: "50% 50%" }}
       >
-        {CLOUDS.map((cloud, i) => {
-          const depth = DEPTH[cloud.depth];
-          return (
-            <motion.div
-              key={i}
-              className="absolute"
+        {CLOUDS.map((cloud, i) => (
+          <div
+            key={i}
+            className={`intro-cloud intro-cloud--${cloud.depth} absolute`}
+            style={{
+              left: `${cloud.left}%`,
+              bottom: `${cloud.bottom}%`,
+              width: `calc(${cloud.width} * var(--cloud-scale) * 1%)`,
+              aspectRatio: cloudAspect(cloud.variant),
+            }}
+          >
+            {/* Idle drift lives on an inner element so its transform
+                never fights the fly-through's translateZ above. */}
+            <div
+              className="cloud-drift h-full w-full"
               style={{
-                left: `${cloud.left}%`,
-                bottom: `${cloud.bottom}%`,
-                width: `calc(${cloud.width} * var(--cloud-scale) * 1%)`,
-                aspectRatio: cloudAspect(cloud.variant),
+                animationDuration: `${cloud.driftDuration}s`,
+                animationDelay: `-${cloud.driftDuration / 3}s`,
+                filter: cloud.shadow
+                  ? "drop-shadow(0 -9px 13px rgba(140, 98, 165, 0.34))"
+                  : undefined,
               }}
-              // x stays put at -50% (centring `left`) while z animates;
-              // keeping both in the same transform avoids a plain CSS
-              // translate being clobbered by motion.
-              initial={{ x: "-50%", z: 0, opacity: depth.opacity }}
-              animate={
-                transitioning
-                  ? {
-                      x: "-50%",
-                      z: depth.z,
-                      opacity: [depth.opacity, depth.opacity, 0],
-                    }
-                  : { x: "-50%", z: 0, opacity: depth.opacity }
-              }
-              transition={
-                transitioning
-                  ? {
-                      z: { duration: depth.duration, delay: depth.delay, ease: "easeIn" },
-                      opacity: {
-                        duration: depth.duration,
-                        delay: depth.delay,
-                        times: [0, 0.62, 1],
-                      },
-                    }
-                  : { duration: 0.4 }
-              }
             >
-              {/* Idle drift lives on an inner element so its transform
-                  never fights the motion-driven translateZ above. */}
-              <div
-                className="cloud-drift h-full w-full"
-                style={{
-                  animationDuration: `${cloud.driftDuration}s`,
-                  animationDelay: `-${cloud.driftDuration / 3}s`,
-                  filter: cloud.shadow
-                    ? "drop-shadow(0 -9px 13px rgba(140, 98, 165, 0.34))"
-                    : undefined,
-                }}
-              >
-                <CloudShape variant={cloud.variant} depth={cloud.depth} flip={cloud.flip} />
-              </div>
-            </motion.div>
-          );
-        })}
+              <CloudShape variant={cloud.variant} depth={cloud.depth} flip={cloud.flip} />
+            </div>
+          </div>
+        ))}
       </div>
 
-      <motion.div
-        className="relative z-10 flex h-full flex-col items-center justify-center px-6"
-        animate={transitioning ? { opacity: 0, scale: 1.5 } : { opacity: 1, scale: 1 }}
-        transition={{ duration: transitioning ? 0.7 : 0.4, ease: "easeIn" }}
-      >
+      <div className="intro-card-layer relative z-10 flex h-full flex-col items-center justify-center px-6">
         {/* A solid card, not a frosted pane. The cloudscape is the
             scene and this is the printed invitation lying on top of it:
             an opaque ivory-to-blush ground with an inset hairline frame,
@@ -396,7 +361,7 @@ export function CloudIntro({ guest }: { guest: Guest }) {
             </motion.button>
           </div>
         </motion.div>
-      </motion.div>
+      </div>
     </div>
   );
 }

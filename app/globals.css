@@ -209,6 +209,126 @@ body {
   animation-direction: alternate;
 }
 
+/* The cover's fly-through (CloudIntro). Every moving part animates only
+   transform and opacity from CSS, so the compositor thread runs it and a
+   busy main thread on a slow phone can't drop its frames. `will-change`
+   promotes the clouds to their own layers while the cover is idle, so
+   the tap doesn't have to build 21 layers in its first frame. */
+.intro-cloud {
+  transform: translateX(-50%);
+  will-change: transform, opacity;
+  animation-fill-mode: both;
+}
+.intro-cloud--back {
+  opacity: 0.72;
+}
+.intro-cloud--mid {
+  opacity: 0.93;
+}
+
+/* Two animations per cloud: the zoom eases in over the whole flight,
+   while the fade holds until 62% and then drops out. */
+.intro-flying .intro-cloud--back {
+  animation:
+    intro-zoom-back 1.9s cubic-bezier(0.42, 0, 1, 1) 0.12s both,
+    intro-fade-back 1.9s ease-in-out 0.12s both;
+}
+.intro-flying .intro-cloud--mid {
+  animation:
+    intro-zoom-mid 1.6s cubic-bezier(0.42, 0, 1, 1) 0.06s both,
+    intro-fade-mid 1.6s ease-in-out 0.06s both;
+}
+.intro-flying .intro-cloud--front {
+  animation:
+    intro-zoom-front 1.35s cubic-bezier(0.42, 0, 1, 1) both,
+    intro-fade-front 1.35s ease-in-out both;
+}
+
+/* The sky clears before the clouds finish, revealing the invitation's
+   sky underneath. */
+.intro-sky {
+  transition: opacity 0.4s ease-out;
+}
+.intro-flying .intro-sky {
+  opacity: 0;
+  transition: opacity 1s ease-out 0.45s;
+}
+
+/* The card rushes toward the camera and fades. */
+.intro-card-layer {
+  will-change: transform, opacity;
+  transition:
+    opacity 0.4s cubic-bezier(0.42, 0, 1, 1),
+    transform 0.4s cubic-bezier(0.42, 0, 1, 1);
+}
+.intro-flying .intro-card-layer {
+  opacity: 0;
+  transform: scale(1.5);
+  transition:
+    opacity 0.7s cubic-bezier(0.42, 0, 1, 1),
+    transform 0.7s cubic-bezier(0.42, 0, 1, 1);
+}
+
+/* Idle motion would only cost frames mid-flight: the clouds' sway is
+   invisible next to the zoom, and the twinkling stars sit under a
+   drop-shadow filter that has to be redrawn whenever one of them moves. */
+.intro-flying .cloud-drift,
+.intro-flying .sparkle {
+  animation-play-state: paused;
+}
+
+@keyframes intro-zoom-back {
+  from {
+    transform: translateX(-50%) translateZ(0);
+  }
+  to {
+    transform: translateX(-50%) translateZ(550px);
+  }
+}
+@keyframes intro-zoom-mid {
+  from {
+    transform: translateX(-50%) translateZ(0);
+  }
+  to {
+    transform: translateX(-50%) translateZ(820px);
+  }
+}
+@keyframes intro-zoom-front {
+  from {
+    transform: translateX(-50%) translateZ(0);
+  }
+  to {
+    transform: translateX(-50%) translateZ(935px);
+  }
+}
+@keyframes intro-fade-back {
+  0%,
+  62% {
+    opacity: 0.72;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes intro-fade-mid {
+  0%,
+  62% {
+    opacity: 0.93;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes intro-fade-front {
+  0%,
+  62% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 /* Soft white glow behind display type sitting straight on the sky. */
 .text-glow {
   text-shadow:
