@@ -9,12 +9,13 @@ export type UcapanMessage = {
 
 /**
  * Every submitted Ucapan & Doa message, newest first, for the public
- * guestbook wall in UcapanSection. Capped well above any realistic guest
+ * guestbook wall in UcapanSection. A guest may have left more than one
+ * message, so these come from the one-to-many UcapanMessage table rather
+ * than the singleton Rsvp row. Capped well above any realistic guest
  * count as a defensive limit, not a product requirement.
  */
 export async function getUcapanMessages(): Promise<UcapanMessage[]> {
-  const rsvps = await prisma.rsvp.findMany({
-    where: { message: { not: null } },
+  const entries = await prisma.ucapanMessage.findMany({
     orderBy: { createdAt: "desc" },
     take: 200,
     select: {
@@ -25,10 +26,10 @@ export async function getUcapanMessages(): Promise<UcapanMessage[]> {
     },
   });
 
-  return rsvps.map((rsvp) => ({
-    id: rsvp.id,
-    name: rsvp.guest.name,
-    message: rsvp.message!,
-    createdAt: rsvp.createdAt.toISOString(),
+  return entries.map((entry) => ({
+    id: entry.id,
+    name: entry.guest.name,
+    message: entry.message,
+    createdAt: entry.createdAt.toISOString(),
   }));
 }

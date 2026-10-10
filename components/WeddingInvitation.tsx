@@ -48,9 +48,9 @@ export async function WeddingInvitation({
 
   return (
     <>
-      <CloudIntro guest={guest} />
+      <CloudIntro guest={guest} guestName={guestName} />
       <main id="invitation-content">
-        <Hero guest={guest} />
+        <Hero />
         <ConstellationDivider />
         <OpeningGreeting />
         <ConstellationDivider />

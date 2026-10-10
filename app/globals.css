@@ -87,6 +87,23 @@ body {
   outline-offset: 3px;
 }
 
+/* The Ucapan & Doa textarea already signals focus with its border
+   color (`focus:border-blossom-400`), so the global outline above is
+   redundant here — and being unlayered, it would otherwise beat that
+   Tailwind utility regardless of specificity. */
+#ucapan-message:focus-visible {
+  outline: none;
+}
+
+/* The intro's CTA takes focus on mount, so the global ink outline lands
+   as a hard dark rectangle around the pink button the instant the card
+   appears. Keep the ring — it is the same affordance for keyboard users
+   — but cut it from the card's own palette and stand it further off. */
+.intro-cta:focus-visible {
+  outline-color: var(--color-blossom-700);
+  outline-offset: 4px;
+}
+
 /* Sky background behind the invitation: the pale, horizon end of the
    same ramp the hero and the intro open on, so scrolling out of the
    hero reads as coming down out of the deep blue rather than as a
@@ -197,19 +214,6 @@ body {
   text-shadow:
     0 0 18px rgba(255, 255, 255, 0.55),
     0 0 48px rgba(120, 180, 240, 0.65);
-}
-
-/* Tight white halo for dark ink text sitting on the intro's frosted
-   panel now that the panel itself is mostly transparent: a cloud can
-   pass directly behind a letter, so the halo — not the panel tint — is
-   what keeps the glyph readable regardless of what's behind it. Kept
-   close to the glyph rather than a wide blur, or dark text on a light
-   halo starts looking hazy instead of crisp. */
-.text-halo {
-  text-shadow:
-    0 1px 2px rgba(255, 255, 255, 0.9),
-    0 0 6px rgba(255, 255, 255, 0.85),
-    0 0 16px rgba(255, 255, 255, 0.6);
 }
 
 /* Thin, blossom-tinted scrollbar for the Ucapan & Doa wall, so a long

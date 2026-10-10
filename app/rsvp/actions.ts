@@ -89,10 +89,10 @@ export async function submitUcapan(
       return { status: "error", message: "Tamu tidak ditemukan." };
     }
 
-    await prisma.rsvp.upsert({
-      where: { guestId },
-      update: { message },
-      create: { guestId, message },
+    // A guest can send more than one Ucapan & Doa, so each submission is
+    // its own row rather than overwriting a singleton message.
+    await prisma.ucapanMessage.create({
+      data: { guestId, message },
     });
 
     // The message is already persisted at this point — a revalidation

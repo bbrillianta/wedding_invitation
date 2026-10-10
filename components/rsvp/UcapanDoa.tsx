@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { Send, Loader2, CheckCircle2 } from "lucide-react";
 import { siteContent } from "@/lib/content";
 import { submitUcapan, type UcapanState } from "@/app/rsvp/actions";
@@ -23,18 +23,21 @@ export function UcapanDoa({
     submitForGuest,
     initialState
   );
+  const formRef = useRef<HTMLFormElement>(null);
 
-  if (state.status === "success") {
-    return (
-      <div className="mx-auto flex max-w-md items-center justify-center gap-2 rounded-2xl border border-white/70 bg-white/60 p-8 text-center text-sm text-ink-700 backdrop-blur-sm">
-        <CheckCircle2 className="h-5 w-5 shrink-0 text-blossom-700" />
-        {ucapan.successMessage}
-      </div>
-    );
-  }
+  // Clear the message field after a successful submit, but keep the form
+  // mounted — a guest can send more than one Ucapan & Doa, so the box
+  // should stay put and ready for the next one instead of being replaced
+  // by a terminal success screen.
+  useEffect(() => {
+    if (state.status === "success") {
+      formRef.current?.reset();
+    }
+  }, [state]);
 
   return (
     <form
+      ref={formRef}
       action={formAction}
       className="mx-auto max-w-md space-y-4 rounded-2xl border border-white/70 bg-white/60 p-8 backdrop-blur-sm"
     >
@@ -101,6 +104,13 @@ export function UcapanDoa({
         )}
         {ucapan.submitLabel}
       </button>
+
+      {state.status === "success" && (
+        <p className="flex items-center justify-center gap-2 text-center text-sm text-blossom-700">
+          <CheckCircle2 className="h-4 w-4 shrink-0" />
+          {ucapan.successMessage}
+        </p>
+      )}
     </form>
   );
 }

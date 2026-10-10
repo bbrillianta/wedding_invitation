@@ -20,17 +20,18 @@ enum MealPreference {
 }
 
 model Guest {
-  id                String    @id @default(cuid())
-  slug              String    @unique
+  id                String          @id @default(cuid())
+  slug              String          @unique
   name              String
   groupLabel        String?
-  invitedGuestCount Int       @default(1)
+  invitedGuestCount Int             @default(1)
   side              String?
-  isGeneric         Boolean   @default(false)
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  isGeneric         Boolean         @default(false)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
   viewedAt          DateTime?
   rsvp              Rsvp?
+  ucapanMessages    UcapanMessage[]
 }
 
 model Rsvp {
@@ -43,7 +44,18 @@ model Rsvp {
   attendance     AttendanceStatus?
   numberOfGuests Int               @default(1)
   mealPreference MealPreference    @default(NO_PREFERENCE)
-  message        String?
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
+}
+
+// A guest can leave more than one Ucapan & Doa message, so these live in
+// their own one-to-many table instead of the singleton Rsvp row.
+model UcapanMessage {
+  id        String   @id @default(cuid())
+  guest     Guest    @relation(fields: [guestId], references: [id])
+  guestId   String
+  message   String
+  createdAt DateTime @default(now())
+
+  @@index([guestId])
 }

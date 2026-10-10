@@ -4,11 +4,9 @@ import { formatDate } from "@/lib/utils";
 import { ConstellationDivider } from "@/components/layout/ConstellationDivider";
 import { Reveal } from "@/components/ui/Reveal";
 import { ShootingStar } from "@/components/sections/ShootingStar";
-import type { Guest } from "@/types";
 
-export function Hero({ guest }: { guest?: Guest | null }) {
+export function Hero() {
   const { couple, hero, weddingDateISO } = siteContent;
-  const greetingName = guest?.groupLabel ?? guest?.name;
 
   // The hero is already in view when the page loads, so its <Reveal>s
   // wait on the intro finishing rather than on scroll (see lib/intro-state).
@@ -31,14 +29,6 @@ export function Hero({ guest }: { guest?: Guest | null }) {
       </div>
 
       <ShootingStar />
-
-      {greetingName && (
-        <Reveal y={16} delay={0.1}>
-          <p className="mb-4 text-sm tracking-[0.2em] text-starlight-dim uppercase">
-            Kepada Yth. {greetingName}
-          </p>
-        </Reveal>
-      )}
 
       <Reveal y={16} delay={0.2}>
         <p className="text-xs tracking-[0.35em] text-starlight uppercase">

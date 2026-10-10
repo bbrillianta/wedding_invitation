@@ -1,13 +1,16 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { MailOpen } from "lucide-react";
 import { siteContent } from "@/lib/content";
+import { formatDate } from "@/lib/utils";
 import { markIntroDone, resetIntro } from "@/lib/intro-state";
 import { startBackgroundMusic } from "@/lib/audio-state";
 import { CloudShape, cloudAspect } from "@/components/intro/CloudShape";
 import type { CloudDepth, CloudVariant } from "@/components/intro/CloudShape";
 import { SparkleField } from "@/components/layout/SparkleField";
+import { Sparkle } from "@/components/ui/Sparkle";
 import type { Guest } from "@/types";
 
 type Phase = "intro" | "transitioning" | "done";
@@ -110,12 +113,18 @@ const CLOUDS: Cloud[] = [
   { left: 132, bottom: -16, width: 40, depth: "front", variant: 4, driftDuration: 114, shadow: true, flip: true },
 ];
 
-export function CloudIntro({ guest }: { guest?: Guest | null }) {
+export function CloudIntro({
+  guest,
+  guestName,
+}: {
+  guest?: Guest | null;
+  /** From the "/" route's `?name=` link — see app/page.tsx. */
+  guestName?: string;
+}) {
   const [phase, setPhase] = useState<Phase>("intro");
   const prefersReducedMotion = useReducedMotion();
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  const { intro, couple } = siteContent;
-  const greetingName = guest?.groupLabel ?? guest?.name;
+  const { intro, couple, weddingDateISO } = siteContent;
+  const greetingName = guest?.groupLabel ?? guest?.name ?? guestName;
 
   useEffect(() => {
     document.body.style.overflow = phase === "done" ? "" : "hidden";
@@ -132,7 +141,12 @@ export function CloudIntro({ guest }: { guest?: Guest | null }) {
   }, [phase]);
 
   useEffect(() => {
-    buttonRef.current?.focus();
+    // No focus() on the CTA here: `main` is inert while the cover is up,
+    // so the first Tab reaches the button anyway, and focusing it on
+    // mount made the browser paint its focus ring the instant the card
+    // appeared — a hard rectangle around the button before anyone had
+    // touched it, which then sat there through the fly-through.
+    //
     // Clear any "already revealed" state left over from an earlier mount
     // so the sections behind this overlay start from their entrance.
     resetIntro();
@@ -166,7 +180,7 @@ export function CloudIntro({ guest }: { guest?: Guest | null }) {
   const transitioning = phase === "transitioning";
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden" onClick={handleEnter}>
+    <div className="fixed inset-0 z-50 overflow-hidden">
       {/* Sky clears before the clouds finish, so the last of them streak
           past against the revealed invitation sky. Both skies are cut
           from the same ramp — the intro just sits higher up it — so this
@@ -253,45 +267,107 @@ export function CloudIntro({ guest }: { guest?: Guest | null }) {
         animate={transitioning ? { opacity: 0, scale: 1.5 } : { opacity: 1, scale: 1 }}
         transition={{ duration: transitioning ? 0.7 : 0.4, ease: "easeIn" }}
       >
-        {/* Barely-there panel: a whisper of tint and just enough blur to
-            take the edge off, so the clouds behind it stay visible — it
-            takes up most of the screen on a phone, and a heavily blurred
-            or solid card there hides more of the art than it's worth.
-            Legibility comes from `.text-halo` on the copy itself rather
-            than from the panel's own opacity or blur, which is what lets
-            both go this low without the text fighting whatever cloud
-            happens to be behind it. */}
-        <div className="w-full max-w-sm rounded-3xl border border-white/40 bg-white/18 px-8 py-10 text-center shadow-[0_20px_50px_-24px_rgba(31,84,147,0.45)] backdrop-blur-[2px]">
-          <p className="text-halo text-xs font-bold tracking-[0.35em] text-blossom-700 uppercase">
-            {intro.eyebrow}
-          </p>
+        {/* A solid card, not a frosted pane. The cloudscape is the
+            scene and this is the printed invitation lying on top of it:
+            an opaque ivory-to-blush ground with an inset hairline frame,
+            the way a real card carries a double rule inside its edge.
+            Going opaque is what lets the type sit dark-on-light at
+            printed-invitation contrast — no `.text-halo` propping up
+            light text against whatever cloud drifts behind a glyph —
+            and the card is kept narrow so the art still reads around it
+            on a phone. */}
+        <motion.div
+          // Reduced motion zeroes the duration rather than dropping the
+          // `initial`, matching <Reveal>: the server can't know the
+          // preference, so branching the initial state would hydrate a
+          // reduced-motion client against markup it never rendered.
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={
+            prefersReducedMotion ? { duration: 0 } : { duration: 0.85, ease: [0.22, 1, 0.36, 1] }
+          }
+          className="relative w-full max-w-[21.5rem] rounded-[2rem] bg-[linear-gradient(180deg,#ffffff_0%,#fefafc_54%,#f8eef5_100%)] px-8 py-9 text-center shadow-[0_2px_12px_rgba(19,57,97,0.12),0_36px_72px_-30px_rgba(19,57,97,0.7)] ring-1 ring-white/80"
+        >
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-[9px] rounded-[1.55rem] border border-blossom-400/45"
+          />
 
-          {greetingName && (
-            <p className="text-halo mt-4 text-sm tracking-[0.2em] text-ink-700 uppercase">
-              Kepada Yth. {greetingName}
+          <div className="relative">
+            {/* The sky's own four-pointed star, used here as the card's
+                ornament so the intro and the invitation share a motif. */}
+            <div className="flex items-center justify-center gap-1.5 text-blossom-400">
+              <Sparkle size={6} />
+              <Sparkle size={11} className="text-blossom-600" />
+              <Sparkle size={6} />
+            </div>
+
+            <p className="mt-4 text-[0.65rem] font-semibold tracking-[0.42em] text-blossom-700 uppercase">
+              {intro.eyebrow}
             </p>
-          )}
 
-          <p className="text-halo mt-3 text-sm font-bold text-ink-500">{intro.subheading}</p>
+            <p className="mt-4 font-serif-display text-sm tracking-wide text-ink-500 italic">
+              {intro.subheading}
+            </p>
 
-          <h1 className="text-halo mt-2 font-script text-5xl text-ink-900 sm:text-6xl">
-            {couple.brideName}
-            <span className="block text-blossom-600">&amp;</span>
-            {couple.groomName}
-          </h1>
+            <h1 className="mt-1 font-script text-[2.85rem] leading-[1.15] text-ink-900 sm:text-5xl">
+              {couple.brideName}
+              <span className="block text-3xl text-blossom-600">&amp;</span>
+              {couple.groomName}
+            </h1>
 
-          <button
-            ref={buttonRef}
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleEnter();
-            }}
-            className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-blossom-700 px-8 py-3 text-sm font-medium text-white shadow-lg transition hover:bg-blossom-600"
-          >
-            {intro.buttonLabel}
-          </button>
-        </div>
+            {/* Rule-flanked date: the one place the card states a fact,
+                so it gets the horizontal rules rather than the eyebrow. */}
+            <div className="mt-5 flex items-center gap-3">
+              <span className="h-px flex-1 bg-gradient-to-r from-transparent to-blossom-400/60" />
+              <p className="font-serif-display text-[0.7rem] tracking-[0.28em] text-ink-700 uppercase">
+                {/* Pinned to the wedding's own timezone: this is a client
+                    component, so a browser-local format would render one
+                    date on the server and a different one for a guest
+                    abroad — a hydration mismatch as well as a wrong date. */}
+                {formatDate(weddingDateISO, {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                  timeZone: "Asia/Jakarta",
+                })}
+              </p>
+              <span className="h-px flex-1 bg-gradient-to-l from-transparent to-blossom-400/60" />
+            </div>
+
+            {greetingName && (
+              <div className="mt-6 rounded-2xl bg-[#fbf0f6] px-5 py-4 ring-1 ring-blossom-400/40">
+                <p className="text-[0.62rem] tracking-[0.22em] text-ink-500 uppercase">
+                  Kepada Yth. Bpk/Ibu/Saudara/i
+                </p>
+                {/* Cormorant, not the Parisienne script the couple's
+                    names use: a guest's name has to be read as a plain
+                    fact ("is this me?"), and it is the one string here
+                    that can be arbitrarily long, which the script cut
+                    handles worst. */}
+                <p className="mt-2 font-serif-display text-[1.4rem] leading-snug font-medium tracking-wide text-ink-900">
+                  {greetingName}
+                </p>
+              </div>
+            )}
+
+            <motion.button
+              type="button"
+              // Reduced motion flattens the values instead of dropping
+              // the props: motion adds a `tabindex` to any element with
+              // a `while*` gesture, so a prop that exists on the server
+              // and vanishes on the client hydrates as an attribute
+              // mismatch.
+              whileHover={prefersReducedMotion ? { scale: 1 } : { scale: 1.03 }}
+              whileTap={prefersReducedMotion ? { scale: 1 } : { scale: 0.97 }}
+              onClick={handleEnter}
+              className="intro-cta mt-7 inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-blossom-700 to-blossom-600 px-8 py-3.5 text-[0.72rem] font-semibold tracking-[0.2em] text-white uppercase shadow-[0_16px_30px_-12px_rgba(179,74,125,0.75)] transition hover:shadow-[0_20px_38px_-10px_rgba(179,74,125,0.9)]"
+            >
+              <MailOpen className="h-4 w-4" />
+              {intro.buttonLabel}
+            </motion.button>
+          </div>
+        </motion.div>
       </motion.div>
     </div>
   );

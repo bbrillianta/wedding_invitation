@@ -11,17 +11,15 @@ import { submitAttendance } from "@/app/rsvp/actions";
 type Choice = "ATTENDING" | "NOT_ATTENDING";
 
 /**
- * Floating confirmation bar. Two ways in:
- *  - First-time guest (no saved attendance yet): stays hidden until the
- *    guest actually reaches the end of the Resepsi card in
- *    <EventDetails/> (the `#acara-end` sentinel) — same one-way,
- *    IntersectionObserver-based reveal as Phase 1, kept for the same
- *    reason: a fast/programmatic scroll can jump straight past the
- *    sentinel without ever reporting an intersection, so a reveal that
- *    depended on a second crossing could miss it entirely.
- *  - Returning guest (already has a saved attendance): shows immediately
- *    on load, preselected to their last answer, so changing their mind
- *    doesn't require re-scrolling the whole page first.
+ * Floating confirmation bar. First-time and returning guests reveal the
+ * same way: it stays hidden until the guest actually reaches the end of
+ * the Resepsi card in <EventDetails/> (the `#acara-end` sentinel) — a
+ * one-way, IntersectionObserver-based reveal, since a fast/programmatic
+ * scroll can jump straight past the sentinel without ever reporting an
+ * intersection, so a reveal that depended on a second crossing could
+ * miss it entirely. A returning guest (already has a saved attendance)
+ * is preselected to their last answer and labeled "Ingin Mengubah
+ * Kehadiran?" instead of "Konfirmasi Kehadiran" once it appears.
  *
  * Either way, a successful confirm hides the bar for the rest of this
  * view — one confirmation per visit — and it only comes back on a later
@@ -37,7 +35,7 @@ export function RSVPStickyBar({
   initialAttendance: AttendanceStatus | null;
 }) {
   const alreadyAnswered = initialAttendance != null;
-  const [visible, setVisible] = useState(alreadyAnswered);
+  const [visible, setVisible] = useState(false);
   const [choice, setChoice] = useState<Choice | null>(
     initialAttendance === "ATTENDING" || initialAttendance === "NOT_ATTENDING"
       ? initialAttendance
@@ -60,11 +58,6 @@ export function RSVPStickyBar({
   }, [confirmed]);
 
   useEffect(() => {
-    if (alreadyAnswered) {
-      setRsvpBarVisible(true);
-      return () => setRsvpBarVisible(false);
-    }
-
     const sentinel = document.getElementById("acara-end");
     if (!sentinel) return;
 
@@ -84,7 +77,7 @@ export function RSVPStickyBar({
       observer.disconnect();
       setRsvpBarVisible(false);
     };
-  }, [alreadyAnswered]);
+  }, []);
 
   function handleChoice(next: Choice) {
     if (!name || isPending || confirmed) return;
