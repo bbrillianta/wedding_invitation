@@ -2,16 +2,19 @@ import { randomInt } from "node:crypto";
 import { readFileSync, renameSync, writeFileSync } from "node:fs";
 import { PrismaClient } from "@prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
+import { siteContent } from "../lib/content";
 
 /**
  * Imports the couple's guest list from a CSV (default data/guests.csv,
  * gitignored because the codes in it are the invitation links).
  *
- * Columns: code, name, side, groupLabel, link. Only name
+ * Columns: code, name, side, groupLabel, phone, link, whatsapp. Only name
  * is required. A row without a code gets a new one, written back into the
  * file *before* the database is touched, so re-running never duplicates a
  * guest. Rows are matched by code, never by name, since names repeat.
- * `link` is output only: the full /?id=<code> URL to send to that guest.
+ * `link` and `whatsapp` are output only: the full /?id=<code> URL, and a
+ * wa.me link that opens a chat with `phone` with the invitation message
+ * (inviteMessage below) already typed in. No phone, no whatsapp link.
  * Any other columns are kept as they are.
  *
  *   node --env-file=.env ./node_modules/.bin/tsx prisma/seed.ts [file.csv]
@@ -25,7 +28,7 @@ try {
 
 const CSV_PATH = process.argv[2] ?? "data/guests.csv";
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://wedding-invitation-psi-tawny.vercel.app").replace(/\/$/, "");
-const COLUMNS = ["code", "name", "side", "groupLabel", "link"];
+const COLUMNS = ["code", "name", "side", "groupLabel", "phone", "link", "whatsapp"];
 // No 0/o, 1/i/l: codes may be read aloud or retyped from a screenshot.
 const CODE_ALPHABET = "23456789abcdefghjkmnpqrstuvwxyz";
 const CODE_LENGTH = 8;
@@ -37,6 +40,43 @@ const adapter = new PrismaLibSql({
 const prisma = new PrismaClient({ adapter });
 
 type Row = Record<string, string>;
+
+// The message a guest receives on WhatsApp, in the usual Indonesian
+// wedding-invitation wording. *…* is bold in WhatsApp.
+function inviteMessage(name: string, link: string): string {
+  const { groomName, brideName } = siteContent.couple;
+  return [
+    "Assalamu'alaikum Warahmatullahi Wabarakatuh",
+    "",
+    "Kepada Yth.",
+    "Bapak/Ibu/Saudara/i",
+    `*${name}*`,
+    "",
+    "Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak/Ibu/Saudara/i untuk menghadiri acara pernikahan kami.",
+    "",
+    "Berikut link undangan kami, untuk info lengkap dari acara dapat dilihat di:",
+    link,
+    "",
+    "Merupakan suatu kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan untuk hadir dan memberikan doa restu.",
+    "",
+    "Mohon maaf perihal undangan hanya dibagikan melalui pesan ini.",
+    "",
+    "Terima kasih banyak atas perhatiannya.",
+    "",
+    "Wassalamu'alaikum Warahmatullahi Wabarakatuh",
+    "",
+    "Kami yang berbahagia,",
+    `*${groomName} & ${brideName}*`,
+  ].join("\n");
+}
+
+// wa.me wants the number in international form, digits only: "62 812-3…"
+// and "0812-3…" both become "62812…". Anything too short isn't a number.
+function whatsappNumber(phone: string): string | null {
+  let digits = phone.replace(/\D/g, "");
+  if (digits.startsWith("0")) digits = `62${digits.slice(1)}`;
+  return digits.length >= 9 ? digits : null;
+}
 
 function parseCsv(text: string): string[][] {
   const rows: string[][] = [];
@@ -126,6 +166,10 @@ async function main() {
       added++;
     }
     row.link = `${SITE_URL}/?id=${row.code}`;
+    const number = whatsappNumber(row.phone ?? "");
+    row.whatsapp = number
+      ? `https://wa.me/${number}?text=${encodeURIComponent(inviteMessage(row.groupLabel || row.name, row.link))}`
+      : "";
   }
 
   // Codes go back into the file first: if the import fails halfway, the
