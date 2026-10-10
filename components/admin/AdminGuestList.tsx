@@ -134,7 +134,7 @@ export function AdminGuestList({ guests }: { guests: AdminGuest[] }) {
   const needle = normalize(query.trim());
   const visible = needle
     ? guests.filter((g) =>
-        [g.name, g.groupLabel ?? "", g.side ?? "", g.code].some((field) => normalize(field).includes(needle))
+        [g.name, g.groupLabel ?? ""].some((field) => normalize(field).includes(needle))
       )
     : guests;
 
