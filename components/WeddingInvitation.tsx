@@ -31,7 +31,7 @@ export async function WeddingInvitation({ guest }: { guest: Guest }) {
         <ConstellationDivider />
         <LoveStoryTimeline />
         <ConstellationDivider />
-        <EventDetails />
+        <EventDetails showAkad={guest.akad} />
         <ConstellationDivider />
         <Countdown />
         <ConstellationDivider />

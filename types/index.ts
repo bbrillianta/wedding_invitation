@@ -67,10 +67,6 @@ export type SiteContent = {
     verseTranslationId: string;
     verseReference: string;
   };
-  events: {
-    ceremony: EventDetail;
-    reception: EventDetail;
-  };
   loveStory: LoveStoryMilestone[];
   gallery: GalleryImage[];
   gift: {
@@ -104,4 +100,6 @@ export type Guest = {
   code: string;
   name: string;
   groupLabel?: string;
+  /** Invited to the Akad as well as the Resepsi. */
+  akad: boolean;
 };

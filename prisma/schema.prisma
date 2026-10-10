@@ -29,6 +29,9 @@ model Guest {
   // Which list the guest came from, e.g. "Teman Mega · Kuliah". Only shown
   // in /admin, to tell guests with the same name apart.
   side              String?
+  // Also invited to the Akad; everyone is invited to the Resepsi. Only
+  // these guests see the Akad on their invitation.
+  akad              Boolean         @default(false)
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   viewedAt          DateTime?

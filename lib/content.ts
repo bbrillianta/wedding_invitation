@@ -39,24 +39,6 @@ export const siteContent: SiteContent = {
       "\"Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya di antaramu rasa kasih dan sayang.\"",
     verseReference: "QS. Ar-Rum: 21",
   },
-  events: {
-    ceremony: {
-      name: "Akad",
-      dateTimeISO: "2026-11-26T09:00:00+07:00",
-      venueName: "Masjid Namira",
-      address: "Lamongan, Jawa Timur",
-      mapEmbedUrl: "https://www.google.com/maps?q=-7.1526463,112.4084817&output=embed",
-      mapLink: "https://maps.app.goo.gl/NHtFBQSd9stBLU7Q7",
-    },
-    reception: {
-      name: "Resepsi",
-      dateTimeISO: "2026-11-28T10:00:00+07:00",
-      venueName: "Gedung Wanita Candra Kencana",
-      address: "Surabaya, Jawa Timur",
-      mapEmbedUrl: "https://www.google.com/maps?q=-7.2878229,112.7618051&output=embed",
-      mapLink: "https://maps.app.goo.gl/efn4TMUNne1WmWZC9",
-    },
-  },
   loveStory: [
     {
       dateLabel: "Agustus 2019",

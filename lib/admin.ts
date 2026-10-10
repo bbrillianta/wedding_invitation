@@ -11,6 +11,7 @@ export type AdminGuest = {
   name: string;
   groupLabel: string | null;
   side: string | null;
+  akad: boolean;
   attendance: AttendanceStatus | null;
   numberOfGuests: number | null;
   checkedInAt: string | null;
@@ -30,6 +31,7 @@ export async function getAdminGuests(): Promise<AdminGuest[]> {
     name: guest.name,
     groupLabel: guest.groupLabel,
     side: guest.side,
+    akad: guest.akad,
     attendance: guest.rsvp?.attendance ?? null,
     numberOfGuests: guest.rsvp?.numberOfGuests ?? null,
     checkedInAt: guest.checkedInAt?.toISOString() ?? null,

@@ -18,6 +18,7 @@ export async function getGuestByCode(code: string | undefined): Promise<Guest | 
     code: guest.code,
     name: guest.name,
     groupLabel: guest.groupLabel ?? undefined,
+    akad: guest.akad,
   };
 }
 

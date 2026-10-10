@@ -176,7 +176,11 @@ export function AdminGuestList({ guests }: { guests: AdminGuest[] }) {
             <li key={guest.id} className="flex items-center justify-between gap-3 px-4 py-3">
               <div className="min-w-0">
                 <p className="truncate font-medium text-ink-900">{guest.groupLabel ?? guest.name}</p>
-                {guest.side && <p className="truncate text-xs text-ink-500">{guest.side}</p>}
+                {(guest.side || guest.akad) && (
+                  <p className="truncate text-xs text-ink-500">
+                    {[guest.side, guest.akad && "Akad"].filter(Boolean).join(" · ")}
+                  </p>
+                )}
                 <p className="mt-1 flex flex-wrap items-center gap-1.5 text-xs">
                   <span className={`rounded-full px-2 py-0.5 ${label.className}`}>{label.text}</span>
                   {arrival.checkedInAt && arrival.arrivedGuestCount !== null && (

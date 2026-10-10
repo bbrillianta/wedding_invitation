@@ -8,8 +8,9 @@ import { siteContent } from "../lib/content";
  * Imports the couple's guest list from a CSV (default data/guests.csv,
  * gitignored because the codes in it are the invitation links).
  *
- * Columns: code, name, side, groupLabel, phone, link, whatsapp. Only name
- * is required. A row without a code gets a new one, written back into the
+ * Columns: code, name, side, groupLabel, akad, phone, link, whatsapp. Only
+ * name is required. `akad` is TRUE for guests also invited to the Akad
+ * (blank or FALSE otherwise). A row without a code gets a new one, written back into the
  * file *before* the database is touched, so re-running never duplicates a
  * guest. Rows are matched by code, never by name, since names repeat.
  * `link` and `whatsapp` are output only: the full /?id=<code> URL, and a
@@ -28,7 +29,7 @@ try {
 
 const CSV_PATH = process.argv[2] ?? "data/guests.csv";
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://wedding-invitation-psi-tawny.vercel.app").replace(/\/$/, "");
-const COLUMNS = ["code", "name", "side", "groupLabel", "phone", "link", "whatsapp"];
+const COLUMNS = ["code", "name", "side", "groupLabel", "akad", "phone", "link", "whatsapp"];
 // No 0/o, 1/i/l: codes may be read aloud or retyped from a screenshot.
 const CODE_ALPHABET = "23456789abcdefghjkmnpqrstuvwxyz";
 const CODE_LENGTH = 8;
@@ -150,6 +151,9 @@ async function main() {
   rows.forEach((row, i) => {
     const line = i + 2;
     if (!row.name) problems.push(`line ${line}: name is empty`);
+    if (!/^(true|false|)$/i.test(row.akad ?? "")) {
+      problems.push(`line ${line}: akad "${row.akad}" should be TRUE, FALSE or empty`);
+    }
     if (row.code) {
       if (seen.has(row.code)) problems.push(`line ${line}: code ${row.code} appears twice`);
       seen.add(row.code);
@@ -183,6 +187,7 @@ async function main() {
       name: row.name,
       side: row.side || null,
       groupLabel: row.groupLabel || null,
+      akad: (row.akad ?? "").toUpperCase() === "TRUE",
     };
     await prisma.guest.upsert({ where: { code: row.code }, update: data, create: { code: row.code, ...data } });
   }

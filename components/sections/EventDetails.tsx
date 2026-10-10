@@ -1,5 +1,5 @@
 import { MapPin, Clock } from "lucide-react";
-import { siteContent } from "@/lib/content";
+import { events } from "@/lib/events";
 import { formatDate, formatTime } from "@/lib/utils";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -53,22 +53,34 @@ function EventCard({ event }: { event: EventDetail }) {
   );
 }
 
-export function EventDetails() {
-  const { events } = siteContent;
+/**
+ * The Akad is only for the guests the couple marked (`akad` in the guest
+ * list); everyone else sees the Resepsi alone. This is a server component,
+ * so for them the Akad's details never reach the browser at all.
+ */
+export function EventDetails({ showAkad }: { showAkad: boolean }) {
   return (
     <section id="event-details" className="py-20 sm:py-28">
       <Container>
         <SectionHeading eyebrow="Save The Date" title="Acara" />
-        <div className="mt-12 grid gap-6 sm:grid-cols-2">
-          {/* Akad lands first, Resepsi a beat later — same order they
-              happen in, and it keeps the pair from popping as one block. */}
-          <Reveal delay={0.1}>
-            <EventCard event={events.ceremony} />
-          </Reveal>
-          <Reveal delay={0.25}>
-            <EventCard event={events.reception} />
-          </Reveal>
-        </div>
+        {showAkad ? (
+          <div className="mt-12 grid gap-6 sm:grid-cols-2">
+            {/* Akad lands first, Resepsi a beat later — same order they
+                happen in, and it keeps the pair from popping as one block. */}
+            <Reveal delay={0.1}>
+              <EventCard event={events.ceremony} />
+            </Reveal>
+            <Reveal delay={0.25}>
+              <EventCard event={events.reception} />
+            </Reveal>
+          </div>
+        ) : (
+          <div className="mx-auto mt-12 max-w-md">
+            <Reveal delay={0.1}>
+              <EventCard event={events.reception} />
+            </Reveal>
+          </div>
+        )}
       </Container>
 
       {/* Marks where the Resepsi card ends, on mobile's single-column
