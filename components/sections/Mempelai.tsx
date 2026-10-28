@@ -7,6 +7,7 @@ import type { Parents } from "@/types";
 
 function ProfileCard({
   photo,
+  photoPosition,
   name,
   role,
   parents,
@@ -14,6 +15,7 @@ function ProfileCard({
   delay,
 }: {
   photo: string;
+  photoPosition?: string;
   name: string;
   role: string;
   parents: Parents;
@@ -23,7 +25,14 @@ function ProfileCard({
   return (
     <Reveal delay={delay} y={20} className="text-center">
       <div className="relative mx-auto h-32 w-32 overflow-hidden rounded-full border-2 border-blossom-400/60 sm:h-36 sm:w-36">
-        <Image src={photo} alt={name} fill className="object-cover" sizes="144px" />
+        <Image
+          src={photo}
+          alt={name}
+          fill
+          className="object-cover"
+          style={{ objectPosition: photoPosition }}
+          sizes="144px"
+        />
       </div>
       <p className="mt-4 text-xs tracking-[0.25em] text-ink-700 uppercase">{role}</p>
       <h3 className="mt-1 font-script text-3xl text-blossom-700 sm:text-4xl">{name}</h3>
@@ -43,6 +52,7 @@ export function Mempelai() {
         <div className="mt-12 grid gap-10 sm:grid-cols-2">
           <ProfileCard
             photo={couple.groomPhoto}
+            photoPosition={couple.groomPhotoPosition}
             name={couple.groomFullName}
             role="Mempelai Pria"
             parents={couple.groomParents}

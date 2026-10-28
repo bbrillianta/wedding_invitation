@@ -2,8 +2,8 @@ import { cn } from "@/lib/utils";
 
 /**
  * Four-pointed sparkle with concave sides — the star shape the sky
- * uses everywhere (background field, intro sky, section dividers,
- * favicon). Drawn in a 24x24 box centred on (12, 12) so it can be
+ * uses everywhere (background field, intro sky, section dividers).
+ * Drawn in a 24x24 box centred on (12, 12) so it can be
  * dropped into any viewBox with a translate/scale. The control points
  * sit far out along each ray, which is what keeps the rays thin and
  * needle-like rather than reading as a fat plus sign.

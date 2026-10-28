@@ -12,6 +12,7 @@ export const events: { ceremony: EventDetail; reception: EventDetail } = {
   ceremony: {
     name: "Akad",
     dateTimeISO: "2026-11-26T09:00:00+07:00",
+    endTimeISO: "2026-11-26T10:00:00+07:00",
     venueName: "Masjid Namira",
     address: "Lamongan, Jawa Timur",
     mapEmbedUrl: "https://www.google.com/maps?q=-7.1526463,112.4084817&output=embed",
@@ -20,6 +21,7 @@ export const events: { ceremony: EventDetail; reception: EventDetail } = {
   reception: {
     name: "Resepsi",
     dateTimeISO: "2026-11-28T10:00:00+07:00",
+    endTimeISO: "2026-11-28T13:00:00+07:00",
     venueName: "Gedung Wanita Candra Kencana",
     address: "Surabaya, Jawa Timur",
     mapEmbedUrl: "https://www.google.com/maps?q=-7.2878229,112.7618051&output=embed",

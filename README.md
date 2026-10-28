@@ -36,4 +36,4 @@ Set `NEXT_PUBLIC_SITE_URL` (see `.env.example`) once the site has a real URL, so
 - Next.js 16 (App Router, TypeScript, static export)
 - Tailwind CSS v4
 - `next/font` (Cormorant Garamond, Parisienne, Jost)
-- `next/og` for the generated favicon and Open Graph image
+- `next/og` for the generated Open Graph image

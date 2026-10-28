@@ -18,6 +18,13 @@ export function withBasePath(path: string): string {
   return `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}${path}`;
 }
 
+/**
+ * Event times are WIB wall-clock times. Pin formatting to that zone so the
+ * output doesn't depend on the timezone of whatever machine renders the page
+ * (deploy servers usually run on UTC, which turned 10:00 WIB into 03:00).
+ */
+const WEDDING_TIME_ZONE = "Asia/Jakarta";
+
 export function formatDate(
   isoDate: string,
   options: Intl.DateTimeFormatOptions = {
@@ -27,12 +34,16 @@ export function formatDate(
     year: "numeric",
   }
 ): string {
-  return new Intl.DateTimeFormat("id-ID", options).format(new Date(isoDate));
+  return new Intl.DateTimeFormat("id-ID", { timeZone: WEDDING_TIME_ZONE, ...options }).format(
+    new Date(isoDate)
+  );
 }
 
 export function formatTime(
   isoDate: string,
   options: Intl.DateTimeFormatOptions = { hour: "2-digit", minute: "2-digit" }
 ): string {
-  return new Intl.DateTimeFormat("id-ID", options).format(new Date(isoDate));
+  return new Intl.DateTimeFormat("id-ID", { timeZone: WEDDING_TIME_ZONE, ...options }).format(
+    new Date(isoDate)
+  );
 }

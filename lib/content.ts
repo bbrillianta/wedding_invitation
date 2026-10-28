@@ -15,11 +15,13 @@ export const siteContent: SiteContent = {
     groomName: "Bintang",
     groomFullName: "Brillianta Bintang Virgantara",
     groomPhoto: withBasePath("/images/couples/bintang.jpeg"),
+    // His face sits higher in the frame than Mega's; this lines their eyes up.
+    groomPhotoPosition: "50% 26%",
     groomParents: { father: "Dwi Nugroho Widi", mother: "Rini Setiawati" },
     monogram: "B & M",
     tagline: "Love as boundless as the sky",
   },
-  weddingDateISO: "2026-11-28T09:00:00+07:00",
+  weddingDateISO: "2026-11-28T10:00:00+07:00",
   intro: {
     eyebrow: "Anda Diundang",
     subheading: "dalam pernikahan",
@@ -42,24 +44,24 @@ export const siteContent: SiteContent = {
   loveStory: [
     {
       dateLabel: "Agustus 2019",
-      title: "Dipertemukan Dalam Satu Kampus",
+      title: "Cinta pada Pandangan Pertama",
       description:
-        "Menjadi rekan satu kelas, bersama selama 3 tahun sebagai teman dekat di kampus.",
-      image: withBasePath("/images/stories/beginning.jpeg"),
+        "Berawal dari teman sekelas D3 Teknik Informatika PENS, Bintang diam-diam jatuh hati pada Mega. Sayangnya, cinta Bintang kala itu bertepuk sebelah tangan.",
+      image: withBasePath("/images/stories/beginning-circle.jpg"),
     },
     {
       dateLabel: "Maret 2024",
-      title: "Dipertemukan Kembali",
+      title: "Kesempatan Kedua",
       description:
-        "Perjuangan Bintang yang tak berhenti mengejar Mega, membuat Mega untuk membuka hati dan saling mengenal lebih dalam.",
-      image: withBasePath("/images/stories/graduate.jpg"),
+        "Setelah berpisah jalan—Mega melanjutkan D4 dan Bintang merantau ke Jakarta—takdir mempertemukan mereka kembali. Bintang mencoba mengetuk hati Mega sekali lagi, bahkan hadir di hari wisudanya.",
+      image: withBasePath("/images/stories/graduate-circle.jpg"),
     },
     {
       dateLabel: "Maret 2026",
-      title: "Memutuskan menuju jenjang serius",
+      title: "Awal Selamanya",
       description:
-        "Setelah saling mengenal, Bintang memantapkan niat baiknya untuk melamar Mega bersama keluarga besarnya.",
-      image: withBasePath("/images/stories/engagement.jpeg"),
+        "Kehadiran dan kesungguhan Bintang perlahan membuat Mega yakin. Hingga akhirnya, Bintang datang bersama keluarganya untuk melamar Mega.",
+      image: withBasePath("/images/stories/engagement-circle.jpg"),
     },
   ],
   gallery: [

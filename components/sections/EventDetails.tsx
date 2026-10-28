@@ -18,7 +18,7 @@ function EventCard({ event }: { event: EventDetail }) {
         <p>
           {formatDate(event.dateTimeISO)}
           <br />
-          {formatTime(event.dateTimeISO)} WIB
+          {formatTime(event.dateTimeISO)} – {formatTime(event.endTimeISO)} WIB
         </p>
       </div>
 

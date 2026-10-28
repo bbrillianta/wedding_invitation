@@ -1,6 +1,7 @@
 export type EventDetail = {
   name: string;
   dateTimeISO: string;
+  endTimeISO: string;
   venueName: string;
   address: string;
   mapEmbedUrl: string;
@@ -46,6 +47,8 @@ export type SiteContent = {
     groomName: string;
     groomFullName: string;
     groomPhoto: string;
+    /** CSS object-position for the round crop; defaults to centred. */
+    groomPhotoPosition?: string;
     groomParents: Parents;
     monogram: string;
     tagline: string;
